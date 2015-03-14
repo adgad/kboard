@@ -10,7 +10,7 @@
 
 
     <Row>
-        <Key android:codes="-106" android:keyLabel="right" />
+        <Key android:codes="-106" android:keyLabel="right"/>
         <Key android:codes="-104"  android:keyLabel="emo" />
         <Key android:codes="-105" android:keyLabel="ಠ_ಠ"/>
 
@@ -24,12 +24,13 @@
         <Key android:codes="-103" android:keyLabel="lol" />
 
     </Row>
-    <Row android:keyHeight="40dp"
+    <Row android:keyHeight="50dp"
         >
-        <Key android:codes="-5"  android:keyLabel="\u232b" android:isRepeatable="true" android:keyEdgeFlags="left"/>
+        <Key android:codes="-5"  android:keyWidth="20%p"   android:keyLabel="\u232b" android:isRepeatable="true" android:keyEdgeFlags="left"/>
 
-        <Key android:codes="-201" android:keyIcon="@drawable/ic_ime_switcher_dark"/>
-        <Key android:codes="10" android:keyLabel="\u21b5"  android:keyEdgeFlags="right"/>
+        <Key android:codes="-201"  android:keyWidth="20%p"  android:keyIcon="@drawable/ic_ime_switcher_dark"/>
+        <Key android:codes="-301" android:keyWidth="20%p" android:keyIcon="@drawable/ic_settings_white_24dp" />
+        <Key android:codes="10"  android:keyWidth="40%p"  android:keyLabel="\u21b5"  android:keyEdgeFlags="right"/>
 
     </Row>
 </Keyboard>

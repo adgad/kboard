@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
+import android.graphics.Canvas;
 import android.inputmethodservice.Keyboard;
 import android.util.Xml;
 import android.view.inputmethod.EditorInfo;
@@ -21,6 +22,7 @@ public class KBoard extends Keyboard {
     public KBoard(Context context, int layoutTemplateResId, CharSequence characters, int columns, int horizontalPadding) {
         super(context, layoutTemplateResId, characters, columns, horizontalPadding);
     }
+
 
     @Override
     protected Key createKeyFromXml(Resources res, Row parent, int x, int y, XmlResourceParser parser) {

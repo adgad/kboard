@@ -3,6 +3,7 @@
 
     <string name="app_name">kboard</string>
     <string name="kboard_ime">kboard IME</string>
+    <string name="settings_name">kboard Settings</string>
     <string name="label_keyboard_key_go">Go</string>
     <string name="label_keyboard_key_send">Send</string>
     <string name="label_keyboard_key_search">Search</string>
