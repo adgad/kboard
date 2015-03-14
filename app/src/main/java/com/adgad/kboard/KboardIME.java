@@ -176,6 +176,10 @@ public class KboardIME  extends InputMethodService
                     word = " ";
                 }
                 ic.commitText(word + getKeyString(primaryCode), 1);
+                final EditorInfo ei = getCurrentInputEditorInfo();
+                if(mAutoSend && (ei.imeOptions & EditorInfo.IME_MASK_ACTION) == EditorInfo.IME_ACTION_SEND) {
+                    ic.performEditorAction(EditorInfo.IME_ACTION_SEND);
+                }
                 break;
             }
     }
