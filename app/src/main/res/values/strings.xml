@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">kboard</string>
+    <string name="kboard_ime">kboard IME</string>
+    <string name="label_keyboard_key_go">Go</string>
+    <string name="label_keyboard_key_send">Send</string>
+    <string name="label_keyboard_key_search">Search</string>
+    <string name="label_keyboard_key_next">Next</string>
+    <string name="label_keyboard_key_enter">\u21b5</string>
+
+</resources>

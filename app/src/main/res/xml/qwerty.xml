@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyWidth="33.33%p"
+    android:horizontalGap="0px"
+    android:verticalGap="0px"
+    android:keyHeight="60dp"
+    >
+    <Row>
+        <Key android:codes="-101" android:keyLabel="k" />
+        <Key android:codes="-102" android:keyLabel="kl"/>
+        <Key android:codes="-103" android:keyLabel="lol" />
+        <Key android:codes="-104"  android:keyLabel="emo" />
+    </Row>
+    <Row>
+        <Key android:codes="-5"  android:keyLabel="\u232b"  android:keyEdgeFlags="left"/>
+        <Key android:codes="-6"  android:keyLabel="normal" android:isSticky="true" android:isModifier="true"/>
+        <Key android:codes="-8" android:keyIcon="@drawable/ic_subtype_keyboard" android:keyLabel="Switch"/>
+        <Key android:codes="-7" android:keyLabel="\u21b5"  android:keyEdgeFlags="right"/>
+
+    </Row>
+</Keyboard>
