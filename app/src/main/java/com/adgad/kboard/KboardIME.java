@@ -39,6 +39,8 @@ public class KboardIME  extends InputMethodService
     private boolean mIsShifted = false;
     private Map<Integer, String> normalKeys;
     private Map<Integer, String> shiftedKeys;
+    private boolean mAutoSpace;
+    private boolean mAutoSend;
 
     /**
      * Main initialization of the input method component.  Be sure to call
@@ -50,13 +52,14 @@ public class KboardIME  extends InputMethodService
         mInputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(this);
-        initKeys();
+        initPrefs();
     }
 
-    private void initKeys() {
+    private void initPrefs() {
+        mAutoSpace = sharedPref.getBoolean("autospace", true);
+        mAutoSend = sharedPref.getBoolean("autosend", false);
         normalKeys = new HashMap<Integer, String>();
         shiftedKeys = new HashMap<Integer, String>();
-
 
         normalKeys.put(-101, sharedPref.getString("normal1", "k"));
         normalKeys.put(-102, sharedPref.getString("normal2", "cool"));
@@ -148,10 +151,8 @@ public class KboardIME  extends InputMethodService
 
         switch(primaryCode) {
             case -5: //backspace
-                if (ic != null) {
-                    ic.deleteSurroundingText(1,0);
-                }
-                break;
+                ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+                ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
             case -6: //MAD
                 mIsShifted = !mIsShifted;
                 resetKeyChars();
@@ -169,8 +170,9 @@ public class KboardIME  extends InputMethodService
                 startActivity(i);
                 break;
             default:
+
                 String word = "";
-                if(ic.getTextBeforeCursor(1,0) != null && ic.getTextBeforeCursor(1,0).length() > 0) {
+                if(mAutoSpace && ic.getTextBeforeCursor(1,0) != null && ic.getTextBeforeCursor(1,0).length() > 0) {
                     word = " ";
                 }
                 ic.commitText(word + getKeyString(primaryCode), 1);
@@ -228,7 +230,7 @@ public class KboardIME  extends InputMethodService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        initKeys();
+        initPrefs();
         if(keyboard != null && mKeys != null && kv != null) {
             resetKeyChars();
         }
