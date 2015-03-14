@@ -2,8 +2,10 @@ package com.adgad.kboard;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.inputmethodservice.Keyboard;
+import android.util.Xml;
 import android.view.inputmethod.EditorInfo;
 
 /**

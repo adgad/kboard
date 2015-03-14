@@ -69,11 +69,15 @@ public class KboardIME  extends InputMethodService
             case -101:
                 return mIsShifted ? "k." : "k";
             case -102:
-                return mIsShifted ? "kl." : "kl";
+                return mIsShifted ? "kl." : "cool";
             case -103:
                 return mIsShifted ? "lol." : "lol";
             case -104:
                 return mIsShifted ? "\uD83D\uDE12" : "\uD83D\uDC4D";
+            case -105:
+                return mIsShifted ? "ಥ_ಥ" : "ಠ_ಠ";
+            case -106:
+                return mIsShifted ? "Right." : "right...";
             case -6:
                 return mIsShifted ? "\u2B06" : "\u21ea";
 
@@ -122,7 +126,11 @@ public class KboardIME  extends InputMethodService
                 switchIME();
                 break;
             default:
-                ic.commitText(getKeyString(primaryCode), 1);
+                String word = "";
+                if(ic.getTextBeforeCursor(1,0) != null && ic.getTextBeforeCursor(1,0).length() > 0) {
+                    word = " ";
+                }
+                ic.commitText(word + getKeyString(primaryCode), 1);
                 break;
             }
     }
