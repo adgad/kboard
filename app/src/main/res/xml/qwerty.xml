@@ -5,8 +5,10 @@
     android:horizontalGap="0px"
     android:verticalGap="0px"
     android:keyHeight="60dp"
+
     >
     <Row>
+
         <Key android:codes="-101" android:keyLabel="k" />
         <Key android:codes="-102" android:keyLabel="kl"/>
         <Key android:codes="-103" android:keyLabel="lol" />
@@ -14,9 +16,11 @@
     </Row>
     <Row>
         <Key android:codes="-5"  android:keyLabel="\u232b"  android:keyEdgeFlags="left"/>
-        <Key android:codes="-6"  android:keyLabel="normal" android:isSticky="true" android:isModifier="true"/>
-        <Key android:codes="-8" android:keyIcon="@drawable/ic_subtype_keyboard" android:keyLabel="Switch"/>
-        <Key android:codes="-7" android:keyLabel="\u21b5"  android:keyEdgeFlags="right"/>
+        <Key android:codes="-6" android:keyLabel="\u21EA"
+            android:keyWidth="15%p" android:isModifier="true"
+            android:isSticky="true"/>
+        <Key android:codes="-201" android:keyIcon="@drawable/ic_ime_switcher_dark"/>
+        <Key android:codes="10" android:keyLabel="\u21b5"  android:keyEdgeFlags="right"/>
 
     </Row>
 </Keyboard>

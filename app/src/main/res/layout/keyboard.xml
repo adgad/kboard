@@ -9,5 +9,5 @@
     android:keyTextSize="14pt"
     android:keyBackground="@drawable/keybg"
 
-    android:keyTextColor="@color/black"
+    android:keyTextColor="@color/white"
 />

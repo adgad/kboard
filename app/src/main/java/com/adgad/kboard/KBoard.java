@@ -34,30 +34,29 @@ public class KBoard extends Keyboard {
             return;
         }
 
-        switch(options & (EditorInfo.IME_MASK_ACTION | EditorInfo.IME_FLAG_NO_ENTER_ACTION)) {
-            case EditorInfo.IME_ACTION_GO:		// 2
-                this.mEnterKey.iconPreview = null;
-                this.mEnterKey.icon = null;
-                this.mEnterKey.label = res.getText(R.string.label_keyboard_key_go);
+        switch (options&(EditorInfo.IME_MASK_ACTION|EditorInfo.IME_FLAG_NO_ENTER_ACTION)) {
+            case EditorInfo.IME_ACTION_GO:
+                mEnterKey.iconPreview = null;
+                mEnterKey.icon = null;
+                mEnterKey.label = res.getText(R.string.label_keyboard_key_go);
                 break;
-            case EditorInfo.IME_ACTION_SEARCH:	// 3
-                this.mEnterKey.label = null;
-                this.mEnterKey.label = res.getText(R.string.label_keyboard_key_search);
-
+            case EditorInfo.IME_ACTION_NEXT:
+                mEnterKey.iconPreview = null;
+                mEnterKey.icon = null;
+                mEnterKey.label = res.getText(R.string.label_keyboard_key_next);
                 break;
-            case EditorInfo.IME_ACTION_SEND:	// 4
-                this.mEnterKey.iconPreview = null;
-                this.mEnterKey.icon = null;
-                this.mEnterKey.label = res.getText(R.string.label_keyboard_key_send);
+            case EditorInfo.IME_ACTION_SEARCH:
+                mEnterKey.icon = res.getDrawable(R.drawable.sym_keyboard_search);
+                mEnterKey.label = null;
                 break;
-            case EditorInfo.IME_ACTION_NEXT:	// 5
-                this.mEnterKey.iconPreview = null;
-                this.mEnterKey.icon = null;
-                this.mEnterKey.label = res.getText(R.string.label_keyboard_key_next);
+            case EditorInfo.IME_ACTION_SEND:
+                mEnterKey.iconPreview = null;
+                mEnterKey.icon = null;
+                mEnterKey.label = res.getText(R.string.label_keyboard_key_send);
                 break;
             default:
-                this.mEnterKey.icon =null;
-                this.mEnterKey.label = res.getText(R.string.label_keyboard_key_enter);
+                mEnterKey.icon = res.getDrawable(R.drawable.sym_keyboard_return);
+                mEnterKey.label = null;
                 break;
         }
     }
