@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference android:title="Enable kboard" >
+        <intent android:action="android.settings.INPUT_METHOD_SETTINGS"
+            />
+    </Preference>
 
     <PreferenceCategory
         android:title="Options">
@@ -15,11 +20,21 @@
             android:defaultValue="false"
             android:summary="Try and send automatically after each word (if the app supports it)."
             />
+        <CheckBoxPreference
+            android:key="vibrate_on"
+            android:title="Vibrate on Keypress"
+            android:defaultValue="false"
+            android:persistent="true" />
+        <CheckBoxPreference
+            android:key="sound_on"
+            android:title="Sound on Keypress"
+            android:defaultValue="false"
+            android:persistent="true" />
     </PreferenceCategory>
 
     <PreferenceScreen
         android:key="custom_keys"
-        android:title="Custom Keys"
+        android:title="Custom Keys - Page 1"
         android:persistent="false">
         <PreferenceCategory
             android:summary="Key 1"
@@ -93,4 +108,79 @@
         </PreferenceCategory>
     </PreferenceScreen>
 
+    <PreferenceScreen
+        android:key="page2.custom_keys"
+        android:title="Custom Keys - Page 2"
+        android:persistent="false">
+        <PreferenceCategory
+            android:summary="Key 1"
+            android:title="Key 1" >
+            <EditTextPreference
+                android:key="page2.normal1"
+                android:title="Normal"
+                android:defaultValue="k"/>
+            <EditTextPreference
+                android:key="page2.shifted1"
+                android:title="Shifted"
+                android:defaultValue="k."/>
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:summary="Key 2"
+            android:title="Key 2" >
+            <EditTextPreference
+                android:key="page2.normal2"
+                android:title="Normal"
+                android:defaultValue="cool"/>
+            <EditTextPreference
+                android:key="page2.shifted2"
+                android:title="Shifted"
+                android:defaultValue="kl."/>
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:summary="Key 3"
+            android:title="Key 3" >
+            <EditTextPreference
+                android:key="page2.normal3"
+                android:title="Normal"
+                android:defaultValue="lol"/>
+            <EditTextPreference
+                android:key="page2.shifted3"
+                android:title="Shifted"
+                android:defaultValue="lol."/>
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:summary="Key 4"
+            android:title="Key 4" >
+            <EditTextPreference
+                android:key="page2.normal4"
+                android:title="Normal"/>
+            <EditTextPreference
+                android:key="page2.shifted4"
+                android:title="Shifted"/>
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:summary="Key 5"
+            android:title="Key 5" >
+            <EditTextPreference
+                android:key="page2.normal5"
+                android:title="Normal"
+                android:defaultValue="ಠ_ಠ"/>
+            <EditTextPreference
+                android:key="page2.shifted5"
+                android:title="Shifted"
+                android:defaultValue="ಥ_ಥ"/>
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:summary="Key 6"
+            android:title="Key 6" >
+            <EditTextPreference
+                android:key="page2.normal6"
+                android:title="Normal"
+                android:defaultValue="right..."/>
+            <EditTextPreference
+                android:key="page2.shifted6"
+                android:title="Shifted"
+                android:defaultValue="Right."/>
+        </PreferenceCategory>
+    </PreferenceScreen>
 </PreferenceScreen>

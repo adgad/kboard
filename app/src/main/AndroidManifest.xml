@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.adgad.kboard" >
+    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
 
     <application
         android:allowBackup="true"
@@ -15,6 +16,7 @@
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
             </intent-filter>
+
         </service>
 
         <activity android:name=".PrefsActivity" android:label="@string/settings_name">
@@ -23,6 +25,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
 
     </application>
 

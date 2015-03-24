@@ -1,5 +1,7 @@
 package com.adgad.kboard;
 
+import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,7 +12,12 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.prefs.Preferences;
 
@@ -36,6 +43,32 @@ public class PrefsActivity extends PreferenceActivity {
                 .commit();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.reset:
+                final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this.getBaseContext());
+                pref.edit().clear().commit();
+                PreferenceManager.setDefaultValues(PrefsActivity.this, R.xml.prefs, true);
+                getFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new SettingsFragment())
+                        .commit();
+                Toast toast = Toast.makeText(this.getBaseContext(), "Reset to defaults!", Toast.LENGTH_SHORT);
+                toast.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.prefs_menu, menu);
+        return true;
+    }
+
 
 
 
@@ -47,8 +80,8 @@ public class PrefsActivity extends PreferenceActivity {
 
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.prefs);
-
             initSummary(getPreferenceScreen());
+
         }
 
         @Override
@@ -83,10 +116,16 @@ public class PrefsActivity extends PreferenceActivity {
             if (p instanceof EditTextPreference) {
                 EditTextPreference editTextPref = (EditTextPreference) p;
                 p.setSummary(editTextPref.getText());
+            } else {
+                if (p instanceof EditTextPreference) {
+                    EditTextPreference editTextPref = (EditTextPreference) p;
+                    p.setSummary(editTextPref.getText());
+                }
             }
         }
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            Log.d("SHared preferences update!", "asd");
             Preference pref = findPreference(key);
             updatePrefSummary(pref);
         }

@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:keyPreviewLayout ="@layout/preview"
-    android:keyTextSize="8pt"
+    android:keyTextSize="6pt"
     android:keyBackground="@drawable/keybg"
-    android:labelTextSize="8pt"
+    android:labelTextSize="6pt"
     android:keyTextColor="@color/white"
 />

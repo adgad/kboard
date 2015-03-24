@@ -9,14 +9,15 @@ import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ public class KboardIME  extends InputMethodService
     private SharedPreferences sharedPref;
     private KeyboardView kv;
     private KBoard keyboard;
+    private Vibrator vib;
     private List<Keyboard.Key> mKeys;
 
     private boolean mIsShifted = false;
@@ -41,6 +43,9 @@ public class KboardIME  extends InputMethodService
     private Map<Integer, String> shiftedKeys;
     private boolean mAutoSpace;
     private boolean mAutoSend;
+    private boolean mVibrateOnClick;
+    private boolean mSoundOnClick;
+    private int mScreen = 0;
 
     /**
      * Main initialization of the input method component.  Be sure to call
@@ -52,34 +57,56 @@ public class KboardIME  extends InputMethodService
         mInputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(this);
+        vib = (Vibrator) this.getSystemService(VIBRATOR_SERVICE);
         initPrefs();
     }
 
     private void initPrefs() {
         mAutoSpace = sharedPref.getBoolean("autospace", true);
         mAutoSend = sharedPref.getBoolean("autosend", false);
+        mVibrateOnClick = sharedPref.getBoolean("vibrate_on", false);
+        mSoundOnClick = sharedPref.getBoolean("sound_on", false);
         normalKeys = new HashMap<Integer, String>();
         shiftedKeys = new HashMap<Integer, String>();
 
-        normalKeys.put(-101, sharedPref.getString("normal1", "k"));
-        normalKeys.put(-102, sharedPref.getString("normal2", "cool"));
-        normalKeys.put(-103, sharedPref.getString("normal3", "lol"));
-        normalKeys.put(-104, sharedPref.getString("normal4", "👍"));
-        normalKeys.put(-105, sharedPref.getString("normal5", "ಠ_ಠ"));
-        normalKeys.put(-106, sharedPref.getString("normal6", "right..."));
+        setKeys();
 
+    }
 
+    private void setKeys() {
+        if(mScreen == 0) {
+            normalKeys.put(-101, sharedPref.getString("normal1", "k"));
+            normalKeys.put(-102, sharedPref.getString("normal2", "cool"));
+            normalKeys.put(-103, sharedPref.getString("normal3", "lol"));
+            normalKeys.put(-104, sharedPref.getString("normal4", "👍"));
+            normalKeys.put(-105, sharedPref.getString("normal5", "ಠ_ಠ"));
+            normalKeys.put(-106, sharedPref.getString("normal6", "right..."));
 
-        shiftedKeys.put(-101, sharedPref.getString("shifted1", "k."));
-        shiftedKeys.put(-102, sharedPref.getString("shifted2", "kl."));
-        shiftedKeys.put(-103, sharedPref.getString("shifted3", "lol."));
-        shiftedKeys.put(-104, sharedPref.getString("shifted4", "😒"));
-        shiftedKeys.put(-105, sharedPref.getString("shifted5", "ಥ_ಥ"));
-        shiftedKeys.put(-106, sharedPref.getString("shifted6", "Right."));
+            shiftedKeys.put(-101, sharedPref.getString("shifted1", "k."));
+            shiftedKeys.put(-102, sharedPref.getString("shifted2", "kl."));
+            shiftedKeys.put(-103, sharedPref.getString("shifted3", "lol."));
+            shiftedKeys.put(-104, sharedPref.getString("shifted4", "😒"));
+            shiftedKeys.put(-105, sharedPref.getString("shifted5", "ಥ_ಥ"));
+            shiftedKeys.put(-106, sharedPref.getString("shifted6", "Right."));
+        } else {
+            normalKeys.put(-101, sharedPref.getString("page2.normal1", "page2.k"));
+            normalKeys.put(-102, sharedPref.getString("page2.normal2", "page2.cool"));
+            normalKeys.put(-103, sharedPref.getString("page2.normal3", "page2.lol"));
+            normalKeys.put(-104, sharedPref.getString("page2.normal4", "page2.👍"));
+            normalKeys.put(-105, sharedPref.getString("page2.normal5", "page2.ಠ_ಠ"));
+            normalKeys.put(-106, sharedPref.getString("page2.normal6", "page2.right..."));
+
+            shiftedKeys.put(-101, sharedPref.getString("page2.shifted1", "page2.k."));
+            shiftedKeys.put(-102, sharedPref.getString("page2.shifted2", "page2.kl."));
+            shiftedKeys.put(-103, sharedPref.getString("page2.shifted3", "page2.lol."));
+            shiftedKeys.put(-104, sharedPref.getString("page2.shifted4", "page2.😒"));
+            shiftedKeys.put(-105, sharedPref.getString("page2.shifted5", "page2.ಥ_ಥ"));
+            shiftedKeys.put(-106, sharedPref.getString("page2.shifted6", "page2.Right."));
+        }
 
     }
     @Override public void onInitializeInterface() {
-        keyboard = new KBoard(this, R.xml.qwerty);
+        keyboard = new KBoard(this, R.xml.qwerty2);
         mKeys = keyboard.getKeys();
         resetKeyChars();
     }
@@ -130,7 +157,7 @@ public class KboardIME  extends InputMethodService
         for(Keyboard.Key key:mKeys) {
             newString = getKeyString(key.codes[0]);
             if(newString != "") {
-                key.label = ellipsize(newString, 10);
+                key.label = ellipsize(newString, 18);
             }
         }
         if(kv != null) {
@@ -140,19 +167,30 @@ public class KboardIME  extends InputMethodService
 
     private void playClick(){
         AudioManager am = (AudioManager)getSystemService(AUDIO_SERVICE);
-           am.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD);
+           am.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD, 0.3f);
+    }
+
+    private void vibrate(){
+        vib.vibrate(40);
     }
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
         playClick();
+        if(mSoundOnClick) {
+            playClick();
+        }
 
+        if(mVibrateOnClick) {
+            vibrate();
+        }
 
         switch(primaryCode) {
             case -5: //backspace
                 ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
                 ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
+                break;
             case -6: //MAD
                 mIsShifted = !mIsShifted;
                 resetKeyChars();
@@ -221,10 +259,18 @@ public class KboardIME  extends InputMethodService
 
     @Override
     public void swipeLeft() {
+        switchScreens();
+    }
+
+    private void switchScreens() {
+        mScreen = (mScreen == 0) ? 1 : 0;
+        setKeys();
+        resetKeyChars();
     }
 
     @Override
     public void swipeRight() {
+        switchScreens();
 
     }
 
