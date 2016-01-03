@@ -6,6 +6,11 @@
             />
     </Preference>
 
+
+    <Preference android:title="Custom Keys" >
+        <intent android:action="com.adgad.kboard.CustomKeysActivity"/>
+    </Preference>
+
     <PreferenceCategory
         android:title="Options">
         <CheckBoxPreference
@@ -37,10 +42,6 @@
             android:entryValues="@array/ColorValues"
             android:defaultValue="material_dark"></ListPreference>
     </PreferenceCategory>
-
-    <Preference android:title="Custom Keys" >
-        <intent android:action="com.adgad.kboard.CustomKeysActivity"/>
-    </Preference>
 
 
 </PreferenceScreen>
