@@ -177,7 +177,7 @@ public class KboardIME  extends InputMethodService
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
-        playClick();
+
         if(mSoundOnClick) {
             playClick();
         }

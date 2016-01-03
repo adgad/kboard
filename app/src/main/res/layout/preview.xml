@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:background="#aaffcc00"
-    android:textStyle="bold"
+    android:textStyle="normal"
+    android:fontFamily="sans-serif-thin"
     android:textSize="20sp"
     >
 </TextView>
