@@ -10,4 +10,7 @@
     android:keyBackground="@drawable/material_dark_keybg"
     android:labelTextSize="6pt"
     android:keyTextColor="@color/white"
-/>
+    android:shadowRadius="0.0"
+    android:paddingTop="0dp"
+    />
+

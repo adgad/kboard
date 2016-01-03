@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="ColorNames">
+        <item>Dark</item>
+        <item>Deep Orange</item>
+        <item>Deep Purple</item>
+        <item>Indigo</item>
+        <item>Teal</item>
+    </string-array>
+    <string-array name="ColorValues">
+        <item>material_dark</item>
+        <item>material_orange</item>
+        <item>material_purple</item>
+        <item>material_indigo</item>
+        <item>material_teal</item>
+    </string-array>
+</resources>

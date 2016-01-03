@@ -92,7 +92,29 @@ public class KboardIME  extends InputMethodService
 
     @Override
     public View onCreateInputView() {
-        kv = (KeyboardView)getLayoutInflater().inflate(R.layout.keyboard, null);
+        String c = sharedPref.getString("color_scheme", "material_dark");
+        int keyboard_id;
+        switch(c) {
+            case "material_dark":
+                keyboard_id = R.layout.material_dark;
+                break;
+            case "material_orange":
+                keyboard_id = R.layout.material_orange;
+                break;
+            case "material_purple":
+                keyboard_id = R.layout.material_purple;
+                break;
+            case "material_indigo":
+                keyboard_id = R.layout.material_indigo;
+                break;
+            case "material_teal":
+                keyboard_id = R.layout.material_teal;
+                break;
+            default:
+                keyboard_id = R.layout.material_dark;
+        }
+
+        kv = (KeyboardView)getLayoutInflater().inflate(keyboard_id, null);
         kv.setKeyboard(keyboard);
         kv.setPreviewEnabled(false);
         kv.setOnKeyboardActionListener(this);
@@ -105,7 +127,6 @@ public class KboardIME  extends InputMethodService
     }
 
     private String getKeyString(int code) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         if (code == -6) {
             return (mScreen + 1) + "/" + totalScreens;
         } else if (code < -100 && code >= (-100 - KEYS_PER_SCREEN)) {
@@ -273,20 +294,28 @@ public class KboardIME  extends InputMethodService
             ArrayList<String> defaultKeys = new ArrayList<>();
             defaultKeys.add("k");
             defaultKeys.add("cool");
-            defaultKeys.add("lol");
+            defaultKeys.add("lol!");
             defaultKeys.add("👍");
             defaultKeys.add("ಠ_ಠ");
-            defaultKeys.add("right...");
-            defaultKeys.add("k.");
-            defaultKeys.add("kl.");
-            defaultKeys.add("lol.");
-            defaultKeys.add("\uD83D\uDE12");
-            defaultKeys.add("ಥ_ಥ");
             defaultKeys.add("haha");
+            defaultKeys.add("No worries!");
+            defaultKeys.add("Happy birthday");
+            defaultKeys.add("\uD83D\uDE12");
+
+            defaultKeys.add("ಥ_ಥ");
+            defaultKeys.add("Thank you");
+            defaultKeys.add("Sorry");
+            defaultKeys.add("k.");
+            defaultKeys.add("hahahah");
+            defaultKeys.add("Hey!");
+            defaultKeys.add("Good thanks, yourself?");
+            defaultKeys.add("Where are you?");
+            defaultKeys.add("I'm busy, will message later.");
+
 
             return defaultKeys;
         }
 
-        public static final String STORAGE_KEY = "userKeys-defaultd";
+        public static final String STORAGE_KEY = "userKeys-defaults";
     }
 }

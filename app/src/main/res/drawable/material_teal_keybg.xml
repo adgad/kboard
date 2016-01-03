@@ -5,12 +5,12 @@
         android:state_focused="false"
         android:state_selected="false"
         android:state_pressed="false"
-        android:drawable="@drawable/normal" />
+        android:drawable="@drawable/material_teal_normal" />
     <!-- Pressed state -->
     <item
         android:state_pressed="true"
-        android:drawable="@drawable/pressed" />
+        android:drawable="@drawable/material_teal_pressed" />
     <item
         android:state_checked="true"
-        android:drawable="@drawable/pressed" />
+        android:drawable="@drawable/material_teal_pressed" />
 </selector>

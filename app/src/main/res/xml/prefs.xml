@@ -30,6 +30,12 @@
             android:title="Sound on Keypress"
             android:defaultValue="false"
             android:persistent="true" />
+
+        <ListPreference android:key="color_scheme"
+            android:title="Color Scheme"
+            android:entries="@array/ColorNames"
+            android:entryValues="@array/ColorValues"
+            android:defaultValue="material_dark"></ListPreference>
     </PreferenceCategory>
 
     <Preference android:title="Custom Keys" >

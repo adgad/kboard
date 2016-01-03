@@ -7,7 +7,10 @@
     android:layout_alignParentBottom="true"
     android:keyPreviewLayout ="@layout/preview"
     android:keyTextSize="6pt"
-    android:keyBackground="@drawable/material_dark_keybg"
+    android:keyBackground="@drawable/material_orange_keybg"
     android:labelTextSize="6pt"
     android:keyTextColor="@color/white"
+    android:shadowRadius="0.0"
+    android:paddingTop="0dp"
 />
+

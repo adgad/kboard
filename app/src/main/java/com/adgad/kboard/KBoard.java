@@ -67,6 +67,7 @@ public class KBoard extends Keyboard {
 
     class LatinKey extends Key {
         public LatinKey(Resources res, Keyboard.Row parent, int x, int y, XmlResourceParser parser) {
+
             super(res, parent, x, y, parser);
         }
 
