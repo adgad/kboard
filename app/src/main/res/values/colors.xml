@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="white" type="color">#ECEFF1</item>
+    <item name="floating_action_button_color" type="color">#ef5350</item>
 </resources>

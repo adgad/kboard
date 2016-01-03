@@ -4,28 +4,33 @@
     android:keyWidth="33.33%p"
     android:horizontalGap="0px"
     android:verticalGap="0px"
-    android:keyHeight="60dp"
+    android:keyHeight="50dp"
 
     >
 
-
+    <Row>
+        <Key android:codes="-101" android:keyLabel="ಠ_ಠ"/>
+        <Key android:codes="-102" android:keyLabel="TEST"/>
+        <Key android:codes="-103" android:keyLabel="TEST"/>
+    </Row>
     <Row>
         <Key android:codes="-104"  android:keyLabel="TEST" />
         <Key android:codes="-105" android:keyLabel="ಠ_ಠ"/>
         <Key android:codes="-106" android:keyLabel="TEST"/>
     </Row>
     <Row>
-        <Key android:codes="-6" android:keyLabel="\u21EA"
-            android:keyWidth="15%p" android:isModifier="true"
-            android:isSticky="true"/>
-        <Key android:codes="-101" android:keyLabel="TES" />
-        <Key android:codes="-102" android:keyLabel="TEST"/>
-        <Key android:codes="-103" android:keyLabel="TEST" />
+
+        <Key android:codes="-107" android:keyLabel="TES" />
+        <Key android:codes="-108" android:keyLabel="TEST"/>
+        <Key android:codes="-109" android:keyLabel="TEST" />
+        <Key android:codes="-5"  android:keyWidth="15%p"   android:keyLabel="\u232b" android:isRepeatable="true" android:keyEdgeFlags="right"/>
 
     </Row>
     <Row android:keyHeight="50dp"
         >
-        <Key android:codes="-5"  android:keyWidth="20%p"   android:keyLabel="\u232b" android:isRepeatable="true" android:keyEdgeFlags="left"/>
+        <Key android:codes="-6" android:keyLabel="\u21EA"
+            android:keyWidth="20%p" android:isModifier="true"
+            android:isSticky="true"/>
 
         <Key android:codes="-201"  android:keyWidth="20%p"  android:keyIcon="@drawable/ic_ime_switcher_dark"/>
         <Key android:codes="-301" android:keyWidth="20%p" android:keyIcon="@drawable/ic_settings_white_24dp" />

@@ -19,14 +19,22 @@
 
         </service>
 
-        <activity android:name=".PrefsActivity" android:label="@string/settings_name">
+        <activity android:name=".PrefsActivity" android:label="@string/settings_name"
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
+        <activity android:name=".CustomKeysActivity" android:label="@string/settings_name" android:theme="@style/AppTheme" >
 
+        <intent-filter>
+                <action android:name="com.adgad.kboard.CustomKeysActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -47,6 +47,7 @@ public class KboardIME  extends InputMethodService
     private boolean mSoundOnClick;
     private int mScreen = 0;
     private int totalScreens = 0;
+    private final int KEYS_PER_SCREEN = 9;
 
     /**
      * Main initialization of the input method component.  Be sure to call
@@ -71,26 +72,16 @@ public class KboardIME  extends InputMethodService
 
     }
 
+
     private void setKeys() {
         Gson gson = new Gson();
-        ArrayList<String> defaultKeys = new ArrayList<>();
-        defaultKeys.add("k");
-        defaultKeys.add("cool");
-        defaultKeys.add("lol");
-        defaultKeys.add("👍");
-        defaultKeys.add("ಠ_ಠ");
-        defaultKeys.add("right...");
-        defaultKeys.add("k.");
-        defaultKeys.add("kl.");
-        defaultKeys.add("lol.");
-        defaultKeys.add("\uD83D\uDE12");
-        defaultKeys.add("ಥ_ಥ");
-        defaultKeys.add("haha");
 
-        String defaultJson = gson.toJson((Object) defaultKeys);
-        String keysAsString = sharedPref.getString("userKeys-defaultc", defaultJson);
+
+
+        String defaultJson = gson.toJson((Object) Keys.getDefault());
+        String keysAsString = sharedPref.getString(Keys.STORAGE_KEY, defaultJson);
         keys = gson.fromJson(keysAsString, ArrayList.class);
-        totalScreens = (int)Math.ceil(keys.size() / 6);
+        totalScreens = (int)Math.ceil((double)keys.size() / KEYS_PER_SCREEN);
 
     }
     @Override public void onInitializeInterface() {
@@ -115,24 +106,17 @@ public class KboardIME  extends InputMethodService
 
     private String getKeyString(int code) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        switch(code) {
-            case -6:
-                return (mScreen + 1) + "/" + totalScreens;
-            case -101:
-            case -102:
-            case -103:
-            case -104:
-            case -105:
-            case -106:
-                int indOfKey = -(code + 101 - (mScreen * 6));
-                if(indOfKey < keys.size()) {
-                    return keys.get(indOfKey);
-                } else {
-                    return "";
-                }
-
-            default:
-                return "";
+        if (code == -6) {
+            return (mScreen + 1) + "/" + totalScreens;
+        } else if (code < -100 && code >= (-100 - KEYS_PER_SCREEN)) {
+            int indOfKey = -(code + 101 - (mScreen * KEYS_PER_SCREEN));
+            if (indOfKey < keys.size()) {
+                return keys.get(indOfKey);
+            } else {
+                return "NO_VALUE";
+            }
+        } else {
+            return "";
         }
     }
 
@@ -149,7 +133,11 @@ public class KboardIME  extends InputMethodService
         String newString;
         for(Keyboard.Key key:mKeys) {
             newString = getKeyString(key.codes[0]);
-            if(newString != "") {
+            if(newString == "NO_VALUE") {
+                key.label = "";
+                key.
+            }
+            else if(newString != "") {
                 key.label = ellipsize(newString, 18);
             }
         }
@@ -205,7 +193,11 @@ public class KboardIME  extends InputMethodService
                 if(mAutoSpace && ic.getTextBeforeCursor(1,0) != null && ic.getTextBeforeCursor(1,0).length() > 0) {
                     word = " ";
                 }
-                ic.commitText(word + getKeyString(primaryCode), 1);
+                String key = getKeyString(primaryCode);
+                if(key == "NO_VALUE") {
+                    key = "";
+                }
+                ic.commitText(word + key, 1);
                 final EditorInfo ei = getCurrentInputEditorInfo();
                 if(mAutoSend && (ei.imeOptions & EditorInfo.IME_MASK_ACTION) == EditorInfo.IME_ACTION_SEND) {
                     ic.performEditorAction(EditorInfo.IME_ACTION_SEND);
@@ -275,5 +267,27 @@ public class KboardIME  extends InputMethodService
         if(keyboard != null && mKeys != null && kv != null) {
             resetKeyChars();
         }
+    }
+
+    public static class Keys {
+        public static ArrayList<String> getDefault() {
+            ArrayList<String> defaultKeys = new ArrayList<>();
+            defaultKeys.add("k");
+            defaultKeys.add("cool");
+            defaultKeys.add("lol");
+            defaultKeys.add("👍");
+            defaultKeys.add("ಠ_ಠ");
+            defaultKeys.add("right...");
+            defaultKeys.add("k.");
+            defaultKeys.add("kl.");
+            defaultKeys.add("lol.");
+            defaultKeys.add("\uD83D\uDE12");
+            defaultKeys.add("ಥ_ಥ");
+            defaultKeys.add("haha");
+
+            return defaultKeys;
+        }
+
+        public static final String STORAGE_KEY = "userKeys-defaultd";
     }
 }

@@ -19,6 +19,9 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
 import java.util.prefs.Preferences;
 
 /**
@@ -38,9 +41,11 @@ public class PrefsActivity extends PreferenceActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getFragmentManager().beginTransaction()
                 .replace(android.R.id.content, new SettingsFragment())
                 .commit();
+
     }
 
     @Override
@@ -70,13 +75,14 @@ public class PrefsActivity extends PreferenceActivity {
     }
 
 
-
-
     public static class SettingsFragment extends PreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
 
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.prefs);
@@ -125,7 +131,6 @@ public class PrefsActivity extends PreferenceActivity {
         }
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            Log.d("SHared preferences update!", "asd");
             Preference pref = findPreference(key);
             updatePrefSummary(pref);
         }
