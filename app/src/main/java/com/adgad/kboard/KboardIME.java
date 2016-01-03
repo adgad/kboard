@@ -135,7 +135,6 @@ public class KboardIME  extends InputMethodService
             newString = getKeyString(key.codes[0]);
             if(newString == "NO_VALUE") {
                 key.label = "";
-                key.
             }
             else if(newString != "") {
                 key.label = ellipsize(newString, 18);
