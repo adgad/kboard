@@ -17,11 +17,13 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
-import java.util.HashMap;
+
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 
 /**
  * Created by arjun on 11/03/15.
@@ -38,14 +40,13 @@ public class KboardIME  extends InputMethodService
     private Vibrator vib;
     private List<Keyboard.Key> mKeys;
 
-    private boolean mIsShifted = false;
-    private Map<Integer, String> normalKeys;
-    private Map<Integer, String> shiftedKeys;
+    private List<String> keys;
     private boolean mAutoSpace;
     private boolean mAutoSend;
     private boolean mVibrateOnClick;
     private boolean mSoundOnClick;
     private int mScreen = 0;
+    private int totalScreens = 0;
 
     /**
      * Main initialization of the input method component.  Be sure to call
@@ -66,43 +67,30 @@ public class KboardIME  extends InputMethodService
         mAutoSend = sharedPref.getBoolean("autosend", false);
         mVibrateOnClick = sharedPref.getBoolean("vibrate_on", false);
         mSoundOnClick = sharedPref.getBoolean("sound_on", false);
-        normalKeys = new HashMap<Integer, String>();
-        shiftedKeys = new HashMap<Integer, String>();
-
         setKeys();
 
     }
 
     private void setKeys() {
-        if(mScreen == 0) {
-            normalKeys.put(-101, sharedPref.getString("normal1", "k"));
-            normalKeys.put(-102, sharedPref.getString("normal2", "cool"));
-            normalKeys.put(-103, sharedPref.getString("normal3", "lol"));
-            normalKeys.put(-104, sharedPref.getString("normal4", "👍"));
-            normalKeys.put(-105, sharedPref.getString("normal5", "ಠ_ಠ"));
-            normalKeys.put(-106, sharedPref.getString("normal6", "right..."));
+        Gson gson = new Gson();
+        ArrayList<String> defaultKeys = new ArrayList<>();
+        defaultKeys.add("k");
+        defaultKeys.add("cool");
+        defaultKeys.add("lol");
+        defaultKeys.add("👍");
+        defaultKeys.add("ಠ_ಠ");
+        defaultKeys.add("right...");
+        defaultKeys.add("k.");
+        defaultKeys.add("kl.");
+        defaultKeys.add("lol.");
+        defaultKeys.add("\uD83D\uDE12");
+        defaultKeys.add("ಥ_ಥ");
+        defaultKeys.add("haha");
 
-            shiftedKeys.put(-101, sharedPref.getString("shifted1", "k."));
-            shiftedKeys.put(-102, sharedPref.getString("shifted2", "kl."));
-            shiftedKeys.put(-103, sharedPref.getString("shifted3", "lol."));
-            shiftedKeys.put(-104, sharedPref.getString("shifted4", "😒"));
-            shiftedKeys.put(-105, sharedPref.getString("shifted5", "ಥ_ಥ"));
-            shiftedKeys.put(-106, sharedPref.getString("shifted6", "Right."));
-        } else {
-            normalKeys.put(-101, sharedPref.getString("page2.normal1", "page2.k"));
-            normalKeys.put(-102, sharedPref.getString("page2.normal2", "page2.cool"));
-            normalKeys.put(-103, sharedPref.getString("page2.normal3", "page2.lol"));
-            normalKeys.put(-104, sharedPref.getString("page2.normal4", "page2.👍"));
-            normalKeys.put(-105, sharedPref.getString("page2.normal5", "page2.ಠ_ಠ"));
-            normalKeys.put(-106, sharedPref.getString("page2.normal6", "page2.right..."));
-
-            shiftedKeys.put(-101, sharedPref.getString("page2.shifted1", "page2.k."));
-            shiftedKeys.put(-102, sharedPref.getString("page2.shifted2", "page2.kl."));
-            shiftedKeys.put(-103, sharedPref.getString("page2.shifted3", "page2.lol."));
-            shiftedKeys.put(-104, sharedPref.getString("page2.shifted4", "page2.😒"));
-            shiftedKeys.put(-105, sharedPref.getString("page2.shifted5", "page2.ಥ_ಥ"));
-            shiftedKeys.put(-106, sharedPref.getString("page2.shifted6", "page2.Right."));
-        }
+        String defaultJson = gson.toJson((Object) defaultKeys);
+        String keysAsString = sharedPref.getString("userKeys-defaultc", defaultJson);
+        keys = gson.fromJson(keysAsString, ArrayList.class);
+        totalScreens = (int)Math.ceil(keys.size() / 6);
 
     }
     @Override public void onInitializeInterface() {
@@ -127,17 +115,22 @@ public class KboardIME  extends InputMethodService
 
     private String getKeyString(int code) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
         switch(code) {
             case -6:
-                return mIsShifted ? "\u2B06" : "\u21ea";
+                return (mScreen + 1) + "/" + totalScreens;
             case -101:
             case -102:
             case -103:
             case -104:
             case -105:
             case -106:
-                return mIsShifted ? shiftedKeys.get(code) : normalKeys.get(code);
+                int indOfKey = -(code + 101 - (mScreen * 6));
+                if(indOfKey < keys.size()) {
+                    return keys.get(indOfKey);
+                } else {
+                    return "";
+                }
+
             default:
                 return "";
         }
@@ -192,8 +185,7 @@ public class KboardIME  extends InputMethodService
                 ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
                 break;
             case -6: //MAD
-                mIsShifted = !mIsShifted;
-                resetKeyChars();
+                switchScreens();
                 break;
             case 10: //enter
                ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
@@ -263,8 +255,7 @@ public class KboardIME  extends InputMethodService
     }
 
     private void switchScreens() {
-        mScreen = (mScreen == 0) ? 1 : 0;
-        setKeys();
+        mScreen = (mScreen < totalScreens - 1) ? mScreen + 1 : 0;
         resetKeyChars();
     }
 

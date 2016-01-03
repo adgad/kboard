@@ -10,10 +10,9 @@
 
 
     <Row>
-        <Key android:codes="-106" android:keyLabel="TEST"/>
         <Key android:codes="-104"  android:keyLabel="TEST" />
         <Key android:codes="-105" android:keyLabel="ಠ_ಠ"/>
-
+        <Key android:codes="-106" android:keyLabel="TEST"/>
     </Row>
     <Row>
         <Key android:codes="-6" android:keyLabel="\u21EA"
