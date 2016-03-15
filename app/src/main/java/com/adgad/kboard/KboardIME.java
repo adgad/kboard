@@ -293,24 +293,24 @@ public class KboardIME  extends InputMethodService
         public static ArrayList<String> getDefault() {
             ArrayList<String> defaultKeys = new ArrayList<>();
             defaultKeys.add("k");
-            defaultKeys.add("cool");
+            defaultKeys.add("Can't talk now. Speak later.");
             defaultKeys.add("lol!");
             defaultKeys.add("👍");
             defaultKeys.add("ಠ_ಠ");
             defaultKeys.add("haha");
-            defaultKeys.add("No worries!");
-            defaultKeys.add("Happy birthday");
+            defaultKeys.add("¯\\_(ツ)_/¯");
+            defaultKeys.add("See you later!");
             defaultKeys.add("\uD83D\uDE12");
 
             defaultKeys.add("ಥ_ಥ");
             defaultKeys.add("Thank you");
             defaultKeys.add("Sorry");
-            defaultKeys.add("k.");
-            defaultKeys.add("hahahah");
+            defaultKeys.add("( ͡° \u035Cʖ ͡°)");
+            defaultKeys.add("(╯°□°）╯︵ ┻━┻)");
             defaultKeys.add("Hey!");
             defaultKeys.add("Good thanks, yourself?");
             defaultKeys.add("Where are you?");
-            defaultKeys.add("I'm busy, will message later.");
+            defaultKeys.add("Cool.");
 
 
             return defaultKeys;
