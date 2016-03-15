@@ -13,6 +13,13 @@
 
     <PreferenceCategory
         android:title="Options">
+
+        <ListPreference android:key="color_scheme"
+            android:title="Color Scheme"
+            android:entries="@array/ColorNames"
+            android:entryValues="@array/ColorValues"
+            android:defaultValue="material_dark"></ListPreference>
+
         <CheckBoxPreference
             android:key="autospace"
             android:title="Auto-space words"
@@ -35,12 +42,12 @@
             android:title="Sound on Keypress"
             android:defaultValue="false"
             android:persistent="true" />
+        <CheckBoxPreference
+            android:key="passive_aggressive"
+            android:title="Passive Aggressive."
+            android:defaultValue="false"
+            android:persistent="true" />
 
-        <ListPreference android:key="color_scheme"
-            android:title="Color Scheme"
-            android:entries="@array/ColorNames"
-            android:entryValues="@array/ColorValues"
-            android:defaultValue="material_dark"></ListPreference>
     </PreferenceCategory>
 
 

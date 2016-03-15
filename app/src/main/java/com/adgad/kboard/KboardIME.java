@@ -41,6 +41,7 @@ public class KboardIME  extends InputMethodService
     private List<Keyboard.Key> mKeys;
 
     private List<String> keys;
+    private boolean mPassiveAggressive;
     private boolean mAutoSpace;
     private boolean mAutoSend;
     private boolean mVibrateOnClick;
@@ -68,6 +69,7 @@ public class KboardIME  extends InputMethodService
         mAutoSend = sharedPref.getBoolean("autosend", false);
         mVibrateOnClick = sharedPref.getBoolean("vibrate_on", false);
         mSoundOnClick = sharedPref.getBoolean("sound_on", false);
+        mPassiveAggressive = sharedPref.getBoolean("passive_aggressive", false);
         setKeys();
 
     }
@@ -176,7 +178,7 @@ public class KboardIME  extends InputMethodService
     }
 
     @Override
-    public void onKey(int primaryCode, int[] keyCodes) {
+    public void onRelease(int primaryCode) {
         InputConnection ic = getCurrentInputConnection();
 
         if(mSoundOnClick) {
@@ -189,8 +191,10 @@ public class KboardIME  extends InputMethodService
 
         switch(primaryCode) {
             case -5: //backspace
+
                 ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
                 ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
+
                 break;
             case -6: //MAD
                 switchScreens();
@@ -216,6 +220,14 @@ public class KboardIME  extends InputMethodService
                 String key = getKeyString(primaryCode);
                 if(key == "NO_VALUE") {
                     key = "";
+                }
+                if(mPassiveAggressive) {
+                    String lastLetter = key.substring(key.length() - 1);
+                    key = key.substring(0,1).toUpperCase() + key.substring(1);
+                    key = key.replace('!', '.');
+                    if(lastLetter != lastLetter.toUpperCase()) {
+                        key = key + ".";
+                    }
                 }
                 ic.commitText(word + key, 1);
                 final EditorInfo ei = getCurrentInputEditorInfo();
@@ -246,11 +258,11 @@ public class KboardIME  extends InputMethodService
 
     }
     @Override
-    public void onPress(int primaryCode) {
+    public void onKey(int primaryCode, int[] keyCodes) {
     }
 
     @Override
-    public void onRelease(int primaryCode) {
+    public void onPress(int primaryCode) {
     }
 
     @Override
@@ -293,25 +305,34 @@ public class KboardIME  extends InputMethodService
         public static ArrayList<String> getDefault() {
             ArrayList<String> defaultKeys = new ArrayList<>();
             defaultKeys.add("k");
-            defaultKeys.add("Can't talk now. Speak later.");
             defaultKeys.add("lol!");
+            defaultKeys.add("thanks");
             defaultKeys.add("👍");
             defaultKeys.add("ಠ_ಠ");
             defaultKeys.add("haha");
             defaultKeys.add("¯\\_(ツ)_/¯");
-            defaultKeys.add("See you later!");
+            defaultKeys.add("see you later!");
             defaultKeys.add("\uD83D\uDE12");
 
             defaultKeys.add("ಥ_ಥ");
-            defaultKeys.add("Thank you");
-            defaultKeys.add("Sorry");
+            defaultKeys.add("thank you");
+            defaultKeys.add("sorry");
             defaultKeys.add("( ͡° \u035Cʖ ͡°)");
             defaultKeys.add("(╯°□°）╯︵ ┻━┻)");
-            defaultKeys.add("Hey!");
+            defaultKeys.add("hey!");
             defaultKeys.add("Good thanks, yourself?");
             defaultKeys.add("Where are you?");
-            defaultKeys.add("Cool.");
+            defaultKeys.add("cool");
 
+            defaultKeys.add("yes");
+            defaultKeys.add("no");
+            defaultKeys.add("maybe");
+            defaultKeys.add("don't mind");
+            defaultKeys.add("sure, whatever");
+            defaultKeys.add("xxx");
+            defaultKeys.add("Can't talk now. Speak later.");
+            defaultKeys.add("I'll be late");
+            defaultKeys.add("okay");
 
             return defaultKeys;
         }
