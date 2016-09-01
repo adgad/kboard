@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/apk/res-auto">
 
     <Preference android:title="Enable kboard" >
         <intent android:action="android.settings.INPUT_METHOD_SETTINGS"
@@ -14,12 +15,39 @@
     <PreferenceCategory
         android:title="Options">
 
-        <ListPreference android:key="color_scheme"
-            android:title="Color Scheme"
-            android:entries="@array/ColorNames"
-            android:entryValues="@array/ColorValues"
-            android:defaultValue="material_dark"></ListPreference>
+        <org.xdty.preference.ColorPreference
+            android:key="bgcolor"
+            android:title="Background Color"
+            tools:dialogTitle="Background Color"
+            tools:colors="@array/bg_colors"
+            tools:columns="5"
+            tools:material="true"
+            android:defaultValue="@color/md_teal500"/>
 
+        <org.xdty.preference.ColorPreference
+            android:key="pressedcolor"
+            android:title="Key Pressed Color"
+            tools:dialogTitle="Key Pressed Color"
+            tools:colors="@array/bg_colors"
+            tools:columns="5"
+            tools:material="true"
+            android:defaultValue="@color/md_teal200"/>
+
+        <org.xdty.preference.ColorPreference
+            android:key="textcolor"
+            android:title="Text Color"
+            tools:dialogTitle="Text Color"
+            tools:colors="@array/text_colors"
+            tools:columns="5"
+            tools:material="true"
+            android:defaultValue="@color/md_black"/>
+
+        <CheckBoxPreference
+            android:key="textBold"
+            android:title="Bold Keys"
+            android:defaultValue="true"
+            android:summary="Keyboard font is bold."
+            />
         <CheckBoxPreference
             android:key="autospace"
             android:title="Auto-space words"
@@ -45,6 +73,7 @@
         <CheckBoxPreference
             android:key="passive_aggressive"
             android:title="Passive Aggressive."
+            android:summary="Automatically capitalize words and end with full stops."
             android:defaultValue="false"
             android:persistent="true" />
 

@@ -38,7 +38,6 @@
         </activity>
 
         <meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAIAIvmQLEE7G2xtCVPqNnTbfElhXWiR-H5BFBvDg" />
-
     </application>
 
 </manifest>

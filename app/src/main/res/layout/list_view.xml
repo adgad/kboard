@@ -4,11 +4,29 @@
     android:layout_width="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@android:color/white">
-    <ListView android:id="@id/android:list"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:background="@android:color/white"/>
-
+    <com.mobeta.android.dslv.DragSortListView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:dslv="http://schemas.android.com/apk/res-auto"
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:paddingTop="0dp"
+        android:paddingBottom="0dp"
+        android:paddingLeft="10dp"
+        android:layout_margin="0dp"
+        android:dividerHeight="1dp"
+        android:fastScrollEnabled="true"
+        dslv:drag_enabled="true"
+        dslv:collapsed_height="2dp"
+        dslv:drag_scroll_start="0.33"
+        dslv:max_drag_scroll_speed="0.5"
+        dslv:float_alpha="0.1"
+        dslv:slide_shuffle_speed="0.3"
+        dslv:track_drag_sort="false"
+        dslv:use_default_controller="true"
+        dslv:sort_enabled="true"
+        dslv:remove_enabled="false"
+        dslv:drag_start_mode="onLongPress" />
 
 
     <android.support.design.widget.FloatingActionButton

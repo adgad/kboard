@@ -1,11 +1,12 @@
 package com.adgad.kboard;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
-import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
 import android.os.Build;
 import android.os.IBinder;
@@ -29,13 +30,13 @@ import java.util.List;
  * Created by arjun on 11/03/15.
  */
 public class KboardIME  extends InputMethodService
-    implements KeyboardView.OnKeyboardActionListener,
+    implements KboardView.OnKeyboardActionListener,
     SharedPreferences.OnSharedPreferenceChangeListener{
 
     private static final String TAG = "kboard";
     private InputMethodManager mInputMethodManager;
     private SharedPreferences sharedPref;
-    private KeyboardView kv;
+    private KboardView kv;
     private KBoard keyboard;
     private Vibrator vib;
     private List<Keyboard.Key> mKeys;
@@ -94,30 +95,10 @@ public class KboardIME  extends InputMethodService
 
     @Override
     public View onCreateInputView() {
-        String c = sharedPref.getString("color_scheme", "material_dark");
-        int keyboard_id;
-        switch(c) {
-            case "material_dark":
-                keyboard_id = R.layout.material_dark;
-                break;
-            case "material_orange":
-                keyboard_id = R.layout.material_orange;
-                break;
-            case "material_purple":
-                keyboard_id = R.layout.material_purple;
-                break;
-            case "material_indigo":
-                keyboard_id = R.layout.material_indigo;
-                break;
-            case "material_teal":
-                keyboard_id = R.layout.material_teal;
-                break;
-            default:
-                keyboard_id = R.layout.material_dark;
-        }
 
-        kv = (KeyboardView)getLayoutInflater().inflate(keyboard_id, null);
+        kv = (KboardView)getLayoutInflater().inflate(R.layout.material_dark, null);
         kv.setKeyboard(keyboard);
+        kv.setBackgroundColor(getResources().getColor(R.color.white));
         kv.setPreviewEnabled(false);
         kv.setOnKeyboardActionListener(this);
         return kv;
@@ -318,7 +299,7 @@ public class KboardIME  extends InputMethodService
             defaultKeys.add("thank you");
             defaultKeys.add("sorry");
             defaultKeys.add("( ͡° \u035Cʖ ͡°)");
-            defaultKeys.add("(╯°□°）╯︵ ┻━┻)");
+            defaultKeys.add("(╯°□°）╯︵ ┻━┻");
             defaultKeys.add("hey!");
             defaultKeys.add("Good thanks, yourself?");
             defaultKeys.add("Where are you?");
