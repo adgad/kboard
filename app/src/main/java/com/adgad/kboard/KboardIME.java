@@ -142,6 +142,7 @@ public class KboardIME  extends InputMethodService
             }
             else if(newString != "") {
                 key.label = ellipsize(newString, 18);
+                key.popupCharacters = newString;
             }
         }
         if(kv != null) {

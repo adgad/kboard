@@ -49,6 +49,12 @@
             android:summary="Keyboard font is bold."
             />
         <CheckBoxPreference
+            android:key="spacing"
+            android:title="Key border"
+            android:defaultValue="false"
+            android:summary="Show border around keys."
+            />
+        <CheckBoxPreference
             android:key="autospace"
             android:title="Auto-space words"
             android:defaultValue="true"

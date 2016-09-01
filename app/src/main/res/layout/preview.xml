@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="#aaffcc00"
+    android:background="@color/material_black"
     android:textStyle="normal"
     android:fontFamily="sans-serif-thin"
     android:textSize="20sp"
