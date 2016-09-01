@@ -3,6 +3,7 @@ package com.adgad.kboard;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -51,12 +52,18 @@ public class KboardView extends KeyboardView {
         mPaint.setAntiAlias(true);
         mPaint.setSubpixelText(true);
         int bgColor = sharedPref.getInt("bgcolor", R.color.md_teal200);
+        int borderColor = sharedPref.getInt("bgcolor", R.color.md_teal200);
         int pressedColor = sharedPref.getInt("pressedcolor", R.color.md_teal500);
         int textColor = sharedPref.getInt("textcolor", R.color.material_black);
         boolean spacing = sharedPref.getBoolean("spacing", false);
         int radius = 5;
         boolean isBold = sharedPref.getBoolean("textBold", true);
 
+        //darken the border color
+        float[] hsv = new float[3];
+        Color.colorToHSV(borderColor, hsv);
+        hsv[2] *= 0.85f; // value component
+        borderColor = Color.HSVToColor(hsv);
 
         mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, isBold ? Typeface.BOLD : Typeface.NORMAL));
 
@@ -64,8 +71,7 @@ public class KboardView extends KeyboardView {
 
         List<Keyboard.Key> keys = getKeyboard().getKeys();
         for (Keyboard.Key key : keys) {
-            mBackground.setColor(bgColor);
-            mBackground.setAlpha(200);
+            mBackground.setColor(borderColor);
             if(key.pressed == true) {
                 mKey.setColor(pressedColor);
             } else {
