@@ -1,7 +1,5 @@
 package com.adgad.kboard;
 
-import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +22,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -88,14 +87,26 @@ public class KboardIME  extends InputMethodService
 
     }
     @Override public void onInitializeInterface() {
-        keyboard = new KBoard(this, R.xml.qwerty2);
+        setKeyboard();
+    }
+
+    private void setKeyboard() {
+        boolean showLucky = sharedPref.getBoolean("feeling_lucky", true);
+        boolean onlyLucky = sharedPref.getBoolean("feeling_very_lucky", false);
+        if(onlyLucky) {
+            keyboard = new KBoard(this, R.xml.only_lucky);
+        } else if (showLucky) {
+            keyboard = new KBoard(this, R.xml.with_lucky);
+        } else {
+            keyboard = new KBoard(this, R.xml.normal);
+        }
         mKeys = keyboard.getKeys();
         resetKeyChars();
     }
 
     @Override
     public View onCreateInputView() {
-
+        setKeyboard();
         kv = (KboardView)getLayoutInflater().inflate(R.layout.material_dark, null);
         kv.setKeyboard(keyboard);
         kv.setBackgroundColor(getResources().getColor(R.color.white));
@@ -162,6 +173,7 @@ public class KboardIME  extends InputMethodService
     @Override
     public void onRelease(int primaryCode) {
         InputConnection ic = getCurrentInputConnection();
+        KCommands commands = new KCommands(ic, getCurrentInputEditorInfo());
 
         if(mSoundOnClick) {
             playClick();
@@ -174,8 +186,14 @@ public class KboardIME  extends InputMethodService
         switch(primaryCode) {
             case -5: //backspace
 
-                ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
-                ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
+                commands.d(1);
+
+                break;
+            case -99: //i'm feeling lucky
+                Random random = new Random();
+                int index = random.nextInt(keys.size());
+
+                sendReply(ic, commands, keys.get(index));
 
                 break;
             case -6: //MAD
@@ -194,30 +212,67 @@ public class KboardIME  extends InputMethodService
                 startActivity(i);
                 break;
             default:
-
-                String word = "";
-                if(mAutoSpace && ic.getTextBeforeCursor(1,0) != null && ic.getTextBeforeCursor(1,0).length() > 0) {
-                    word = " ";
-                }
-                String key = getKeyString(primaryCode);
-                if(key == "NO_VALUE") {
-                    key = "";
-                }
-                if(mPassiveAggressive) {
-                    String lastLetter = key.substring(key.length() - 1);
-                    key = key.substring(0,1).toUpperCase() + key.substring(1);
-                    key = key.replace('!', '.');
-                    if(lastLetter != lastLetter.toUpperCase()) {
-                        key = key + ".";
-                    }
-                }
-                ic.commitText(word + key, 1);
-                final EditorInfo ei = getCurrentInputEditorInfo();
-                if(mAutoSend && (ei.imeOptions & EditorInfo.IME_MASK_ACTION) == EditorInfo.IME_ACTION_SEND) {
-                    ic.performEditorAction(EditorInfo.IME_ACTION_SEND);
+                String keyString = getKeyString(primaryCode);
+                if(keyString.startsWith("/")) {
+                    parseCommand(commands, keyString);
+                } else {
+                    sendReply(ic, commands, keyString);
                 }
                 break;
             }
+    }
+
+    public void parseCommand(KCommands kc, String cmd) {
+        String[] cmdSplit = cmd.split("!");
+        String cmdAction = cmdSplit[1];
+        String[] commands = cmdAction.split(",");
+
+        for(String command : commands) {
+            String commandMethod = null;
+            String parameter = null;
+            int numberOfTimes = 1;
+            String[] commandMethodParts = command.split("\\s*(\\((?!\\))|,|(?<!\\()\\))\\s*"); //split between number and non-number
+            if(commandMethodParts.length > 1) { //has numericPart
+                commandMethod = commandMethodParts[0];
+                parameter = commandMethodParts[1];
+            } else {
+                commandMethod = commandMethodParts[0];
+            }
+
+
+            String[] commandParts = commandMethod.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //split between number and non-number
+            if(commandParts.length > 1) { //has numericPart
+                numberOfTimes = Integer.parseInt(commandParts[0]);
+                commandMethod = commandParts[1];
+            } else {
+                commandMethod = commandParts[0];
+            }
+
+            kc.execute(commandMethod, numberOfTimes, parameter);
+
+        }
+
+    }
+    public void sendReply(InputConnection ic, KCommands commands, String key) {
+        String word = "";
+        if(mAutoSpace && ic.getTextBeforeCursor(1,0) != null && ic.getTextBeforeCursor(1,0).length() > 0) {
+            word = " ";
+        }
+        if(key == "NO_VALUE") {
+            key = "";
+        }
+        if(mPassiveAggressive) {
+            String lastLetter = key.substring(key.length() - 1);
+            key = key.substring(0,1).toUpperCase() + key.substring(1);
+            key = key.replace('!', '.');
+            if(lastLetter != lastLetter.toUpperCase()) {
+                key = key + ".";
+            }
+        }
+        ic.commitText(word + key, 1);
+        if(mAutoSend) {
+            commands.s(1);
+        }
     }
 
     public void switchIME() {
@@ -278,7 +333,9 @@ public class KboardIME  extends InputMethodService
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         initPrefs();
+        setKeyboard();
         if(keyboard != null && mKeys != null && kv != null) {
+            kv.setKeyboard(keyboard);
             resetKeyChars();
         }
     }
@@ -316,6 +373,15 @@ public class KboardIME  extends InputMethodService
             defaultKeys.add("I'll be late");
             defaultKeys.add("okay");
 
+            defaultKeys.add("/Italicise Previous!dw,i(_$0_)");
+            defaultKeys.add("/Italicise Next!i(__),j");
+            defaultKeys.add("/Bolden Previous!dw,i(*$0*)");
+            defaultKeys.add("/Bolden Next!i(**),j");
+            defaultKeys.add("/Copy All!yy");
+            defaultKeys.add("/Paste!p");
+            defaultKeys.add("/-1w!b");
+            defaultKeys.add("/+1w!w");
+            defaultKeys.add("/Delete Word!dw");
             return defaultKeys;
         }
 

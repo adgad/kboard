@@ -42,6 +42,10 @@ public class KboardView extends KeyboardView {
 
     }
 
+    public boolean isLuckyKey(Keyboard.Key key) {
+        return key.codes[0] == -99;
+    }
+
     @Override
     public void onDraw(Canvas canvas) {
         mCanvas = canvas;
@@ -65,14 +69,18 @@ public class KboardView extends KeyboardView {
         hsv[2] *= 0.85f; // value component
         borderColor = Color.HSVToColor(hsv);
 
-        mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, isBold ? Typeface.BOLD : Typeface.NORMAL));
+
 
         mPaint.setColor(textColor);
 
         List<Keyboard.Key> keys = getKeyboard().getKeys();
         for (Keyboard.Key key : keys) {
+
             mBackground.setColor(borderColor);
-            if(key.pressed == true) {
+
+
+
+            if((key.pressed == true && !isLuckyKey(key)) || (isLuckyKey(key) && !key.pressed)) {
                 mKey.setColor(pressedColor);
             } else {
                 mKey.setColor(bgColor);
@@ -96,7 +104,17 @@ public class KboardView extends KeyboardView {
                 key.icon.setColorFilter(textColor, PorterDuff.Mode.MULTIPLY);
                 key.icon.draw(canvas);
             } else if(key.label != null) {
-                canvas.drawText(key.label.toString(), key.x + ((key.width - marginRight)/2) + marginLeft, key.y + ((key.height - marginBottom)/2) + marginTop, mPaint);
+                String label = key.popupCharacters != null ? key.popupCharacters.toString() : key.label.toString();
+                boolean isCommandKey = label.charAt(0) == '/' && label.indexOf("!") > 0;
+                if (isCommandKey) {
+                    label = label.substring(1, label.indexOf("!"));
+                    mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, isBold ? Typeface.ITALIC : Typeface.BOLD_ITALIC));
+                    mPaint.setUnderlineText(true);
+                } else {
+                    mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, isBold ? Typeface.BOLD : Typeface.NORMAL));
+                    mPaint.setUnderlineText(false);
+                }
+                canvas.drawText(label, key.x + ((key.width - marginRight)/2) + marginLeft, key.y + ((key.height - marginBottom)/2) + marginTop, mPaint);
             }
         }
     }

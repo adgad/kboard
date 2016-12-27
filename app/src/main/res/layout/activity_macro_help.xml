@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:scrollbars="vertical"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_margin="10dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Kboard allows you to put custom commands as a key.\n\n To add a custom command, add a new key with text in the format: \n /&lt;Friendly Title!&lt;comma separated commands>"
+            android:id="@+id/textView2"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Examples"
+            android:textStyle="bold"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/WhatsApp italicise!dw,i(_$0_)\n\n/WhatsApp bolden!dw,i(*$0*)\n\n/WhatsApp italics!i(__),j\n\n/Copy All!yy\n\n/Repeat word x4!dw,4p"
+            android:id="@+id/textView4"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="All commands"
+            android:textStyle="bold"
+            android:id="@+id/textView5"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="20sp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" d=delete previous character \n\n dw=delete previous word \n\n dd=delete all \n\n yy=copy all \n\n y=copy selection \n\n p=paste from clipboard \n\n i(text)=output the content of the brackets ($0 gets replaced with the last deleted/copied content) \n\n upper(text)=as o, but in upper case \n\n lower(text)=as o, but lower case \n\n j=move cursor back by a character \n\n k=move cursor forward by a character \n\n b=move cursor back by a word \n\n w=move cursor forward by a word"
+            android:id="@+id/textView6"
+            android:layout_gravity="center_horizontal"  />
+
+    </LinearLayout>
+</ScrollView>

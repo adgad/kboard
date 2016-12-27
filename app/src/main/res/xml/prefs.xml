@@ -82,7 +82,18 @@
             android:summary="Automatically capitalize words and end with full stops."
             android:defaultValue="false"
             android:persistent="true" />
-
+        <CheckBoxPreference
+            android:key="feeling_lucky"
+            android:title="I'm feeling lucky."
+            android:summary="Shows a key to randomly picks one of your responses."
+            android:defaultValue="true"
+            android:persistent="true" />
+        <CheckBoxPreference
+            android:key="feeling_very_lucky"
+            android:title="I'm feeling very lucky"
+            android:summary="ONLY show a single key that randomly picks a response. YOLO."
+            android:defaultValue="false"
+            android:persistent="true" />
     </PreferenceCategory>
 
 

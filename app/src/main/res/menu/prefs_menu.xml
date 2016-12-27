@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/macro_help"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="Macro Help" />
     <item android:id="@+id/reset"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
         android:title="Reset Preferences" />

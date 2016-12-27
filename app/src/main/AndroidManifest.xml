@@ -1,43 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.adgad.kboard" >
-    <uses-permission android:name="android.permission.VIBRATE"></uses-permission>
+    package="com.adgad.kboard">
+
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
         android:backupAgent=".MyBackupAgent"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <service android:name=".KboardIME"
+        android:theme="@style/AppTheme">
+        <service
+            android:name=".KboardIME"
             android:label="@string/kboard_ime"
-            android:permission="android.permission.BIND_INPUT_METHOD"
-            >
-            <meta-data android:name="android.view.im" android:resource="@xml/method"/>
+            android:permission="android.permission.BIND_INPUT_METHOD">
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/method" />
+
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
             </intent-filter>
-
         </service>
 
-        <activity android:name=".PrefsActivity" android:label="@string/settings_name"
-            android:theme="@style/AppTheme" >
+        <activity
+            android:name=".PrefsActivity"
+            android:label="@string/settings_name"
+            android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
-        <activity android:name=".CustomKeysActivity" android:label="@string/settings_name" android:theme="@style/AppTheme" >
-
-        <intent-filter>
+        <activity
+            android:name=".CustomKeysActivity"
+            android:label="@string/settings_name"
+            android:theme="@style/AppTheme">
+            <intent-filter>
                 <action android:name="com.adgad.kboard.CustomKeysActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAIAIvmQLEE7G2xtCVPqNnTbfElhXWiR-H5BFBvDg" />
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAIAIvmQLEE7G2xtCVPqNnTbfElhXWiR-H5BFBvDg" />
+
     </application>
 
 </manifest>

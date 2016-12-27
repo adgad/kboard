@@ -9,5 +9,6 @@
     <string name="label_keyboard_key_search">Search</string>
     <string name="label_keyboard_key_next">Next</string>
     <string name="label_keyboard_key_enter">\u21b5</string>
+    <string name="title_activity_macro_help">MacroHelpActivity</string>
 
 </resources>

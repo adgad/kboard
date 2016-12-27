@@ -1,5 +1,6 @@
 package com.adgad.kboard;
 
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
@@ -61,6 +62,13 @@ public class PrefsActivity extends PreferenceActivity {
                         .commit();
                 Toast toast = Toast.makeText(this.getBaseContext(), "Reset to defaults!", Toast.LENGTH_SHORT);
                 toast.show();
+                return true;
+            case R.id.macro_help:
+                Dialog dialog = new Dialog(PrefsActivity.this);
+                dialog.setContentView(R.layout.activity_macro_help);
+                dialog.setTitle("KBoard Macro Help");
+                dialog.setCancelable(true);
+                dialog.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
