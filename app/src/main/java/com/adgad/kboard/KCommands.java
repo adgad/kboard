@@ -70,6 +70,28 @@ public class KCommands {
        buffer.push(buf);
     }
 
+    //delete to a character
+    public void dt(int n, String parameter) {
+        String buf = "";
+        for(int i =0; i<n;i++) {
+            final int charactersToGet = 30;
+            final String splitRegexp = parameter;
+
+            // delete trailing spaces
+            while (inputConnection.getTextBeforeCursor(1, 0).toString().equals(splitRegexp)) {
+                buf += inputConnection.getTextBeforeCursor(1, 0).toString();
+                inputConnection.deleteSurroundingText(1, 0);
+            }
+
+            // delete last word letters
+            String[] words = inputConnection.getTextBeforeCursor(charactersToGet, 0).toString().split(splitRegexp);
+            String lastWord = words[words.length - 1];
+            buf += (parameter + lastWord);
+            inputConnection.deleteSurroundingText(lastWord.length() + parameter.length(), 0);
+        }
+        buffer.push(buf);
+    }
+
     public void dd(int n) {
         inputConnection.performContextMenuAction(android.R.id.selectAll);
         buffer.push(inputConnection.getSelectedText(0).toString());
@@ -221,6 +243,52 @@ public class KCommands {
             int position = getCursorPosition() + nextLineLength;
             inputConnection.setSelection(position, position);
         }
+    }
+
+    public void e(int n, String cmd) {
+        //Remove leading !
+        if(cmd.startsWith("!")) {
+            cmd = cmd.substring(1);
+        }
+        for(int i=0;i<n;i++) {
+            String commands[];
+            if(cmd.matches("^\\d+e.*")) {
+                commands = new String[1];
+                commands[0] = cmd;
+                int numberOfTimes = cmd.indexOf("e") > 0 ? Integer.parseInt(cmd.substring(0, cmd.indexOf("e"))) : 1;
+                String parameter = cmd.substring(cmd.indexOf("(") + 1, cmd.lastIndexOf(")"));
+                e(numberOfTimes, parameter);
+            } else {
+                commands = cmd.split(",");
+                for(String command : commands) {
+                    String commandMethod = null;
+                    String parameter = null;
+                    int numberOfTimes = 1;
+                    String[] commandMethodParts = command.split("(\\((?!\\))|,|(?<!\\()\\))"); //split out parameter in brackets
+                    if(commandMethodParts.length > 1) { //has parameter
+                        commandMethod = commandMethodParts[0];
+                        parameter = commandMethodParts[1].replaceFirst("\\$0", buffer.peek());
+                    } else {
+                        commandMethod = commandMethodParts[0];
+                    }
+
+
+                    String[] commandParts = commandMethod.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //split between number and non-number
+                    if(commandParts.length > 1) { //has numericPart
+                        numberOfTimes = Integer.parseInt(commandParts[0]);
+                        commandMethod = commandParts[1];
+                    } else {
+                        commandMethod = commandParts[0];
+                    }
+
+                    execute(commandMethod, numberOfTimes, parameter);
+
+                }
+            }
+
+
+        }
+
     }
 
     public boolean execute(String cmd, int n, String parameter) {

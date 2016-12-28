@@ -223,36 +223,11 @@ public class KboardIME  extends InputMethodService
     }
 
     public void parseCommand(KCommands kc, String cmd) {
-        String[] cmdSplit = cmd.split("!");
+        String[] cmdSplit = cmd.split("!", 2);
         String cmdAction = cmdSplit[1];
-        String[] commands = cmdAction.split(",");
-
-        for(String command : commands) {
-            String commandMethod = null;
-            String parameter = null;
-            int numberOfTimes = 1;
-            String[] commandMethodParts = command.split("\\s*(\\((?!\\))|,|(?<!\\()\\))\\s*"); //split between number and non-number
-            if(commandMethodParts.length > 1) { //has numericPart
-                commandMethod = commandMethodParts[0];
-                parameter = commandMethodParts[1];
-            } else {
-                commandMethod = commandMethodParts[0];
-            }
-
-
-            String[] commandParts = commandMethod.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //split between number and non-number
-            if(commandParts.length > 1) { //has numericPart
-                numberOfTimes = Integer.parseInt(commandParts[0]);
-                commandMethod = commandParts[1];
-            } else {
-                commandMethod = commandParts[0];
-            }
-
-            kc.execute(commandMethod, numberOfTimes, parameter);
-
-        }
-
+        kc.e(1, cmdAction);
     }
+
     public void sendReply(InputConnection ic, KCommands commands, String key) {
         String word = "";
         if(mAutoSpace && ic.getTextBeforeCursor(1,0) != null && ic.getTextBeforeCursor(1,0).length() > 0) {
