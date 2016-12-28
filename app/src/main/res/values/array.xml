@@ -691,4 +691,10 @@
         <item>@color/md_bluegrey700</item>
     </array>
 
+    <string-array name="rows">
+        <item>"3"</item>
+        <item>"4"</item>
+        <item>"5"</item>
+    </string-array>
+
 </resources>

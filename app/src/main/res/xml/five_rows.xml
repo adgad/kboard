@@ -5,7 +5,7 @@
     android:keyWidth="33.33%p"
     android:horizontalGap="0px"
     android:verticalGap="0px"
-    android:keyHeight="50dp"
+    android:keyHeight="40dp"
     >
     <Row>
         <Key android:codes="-101" android:keyLabel="ಠ_ಠ"/>
@@ -26,6 +26,20 @@
         <Key android:codes="-110"   android:keyLabel="TEST" />
         <Key android:codes="-111"   android:keyLabel="TEST" />
         <Key android:codes="-112"   android:keyLabel="TEST" />
+    </Row>
+    <Row>
+
+        <Key android:codes="-113"   android:keyLabel="TEST" />
+        <Key android:codes="-114"   android:keyLabel="TEST" />
+        <Key android:codes="-115"   android:keyLabel="TEST" />
+        <Key android:codes="-116"   android:keyLabel="TEST" />
+    </Row>
+    <Row>
+
+        <Key android:codes="-117"   android:keyLabel="TEST" />
+        <Key android:codes="-118"   android:keyLabel="TEST" />
+        <Key android:codes="-119"   android:keyLabel="TEST" />
+        <Key android:codes="-120"   android:keyLabel="TEST" />
     </Row>
 
     <Row android:keyHeight="45dp"

@@ -42,6 +42,16 @@ public class KboardView extends KeyboardView {
 
     }
 
+
+    private String ellipsize(String input, int maxLength) {
+        String ellip = "...";
+        if (input == null || input.length() <= maxLength
+                || input.length() < ellip.length()) {
+            return input;
+        }
+        return input.substring(0, maxLength - ellip.length()).concat(ellip);
+    }
+
     public boolean isLuckyKey(Keyboard.Key key) {
         return key.codes[0] == -99;
     }
@@ -114,7 +124,7 @@ public class KboardView extends KeyboardView {
                     mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, isBold ? Typeface.BOLD : Typeface.NORMAL));
                     mPaint.setUnderlineText(false);
                 }
-                canvas.drawText(label, key.x + ((key.width - marginRight)/2) + marginLeft, key.y + ((key.height - marginBottom)/2) + marginTop, mPaint);
+                canvas.drawText(ellipsize(label, 14), key.x + ((key.width - marginRight) / 2) + marginLeft, key.y + ((key.height - marginBottom) / 2) + marginTop, mPaint);
             }
         }
     }

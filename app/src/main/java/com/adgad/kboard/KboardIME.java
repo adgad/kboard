@@ -48,7 +48,10 @@ public class KboardIME  extends InputMethodService
     private boolean mSoundOnClick;
     private int mScreen = 0;
     private int totalScreens = 0;
-    private final int KEYS_PER_SCREEN = 9;
+    private int mRows = 3;
+    private int mKeysPerScreen = 12;
+    private final int KEYS_PER_ROW = 4;
+
 
     /**
      * Main initialization of the input method component.  Be sure to call
@@ -57,6 +60,7 @@ public class KboardIME  extends InputMethodService
     @Override public void onCreate() {
         super.onCreate();
         PreferenceManager.setDefaultValues(this, R.xml.prefs, false);
+
         mInputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPref.registerOnSharedPreferenceChangeListener(this);
@@ -70,6 +74,8 @@ public class KboardIME  extends InputMethodService
         mVibrateOnClick = sharedPref.getBoolean("vibrate_on", false);
         mSoundOnClick = sharedPref.getBoolean("sound_on", false);
         mPassiveAggressive = sharedPref.getBoolean("passive_aggressive", false);
+        mRows = Integer.parseInt(sharedPref.getString("rows", "3"));
+        mKeysPerScreen = mRows * KEYS_PER_ROW;
         setKeys();
 
     }
@@ -83,7 +89,7 @@ public class KboardIME  extends InputMethodService
         String defaultJson = gson.toJson((Object) Keys.getDefault());
         String keysAsString = sharedPref.getString(Keys.STORAGE_KEY, defaultJson);
         keys = gson.fromJson(keysAsString, ArrayList.class);
-        totalScreens = (int)Math.ceil((double)keys.size() / KEYS_PER_SCREEN);
+        totalScreens = (int)Math.ceil((double)keys.size() / (mRows * KEYS_PER_ROW));
 
     }
     @Override public void onInitializeInterface() {
@@ -91,12 +97,11 @@ public class KboardIME  extends InputMethodService
     }
 
     private void setKeyboard() {
-        boolean showLucky = sharedPref.getBoolean("feeling_lucky", true);
-        boolean onlyLucky = sharedPref.getBoolean("feeling_very_lucky", false);
-        if(onlyLucky) {
-            keyboard = new KBoard(this, R.xml.only_lucky);
-        } else if (showLucky) {
-            keyboard = new KBoard(this, R.xml.with_lucky);
+        String numberOfRows = sharedPref.getString("rows", "3");
+        if(numberOfRows.equals("5")) {
+            keyboard = new KBoard(this, R.xml.five_rows);
+        } else if (numberOfRows.equals("4")) {
+            keyboard = new KBoard(this, R.xml.four_rows);
         } else {
             keyboard = new KBoard(this, R.xml.normal);
         }
@@ -123,8 +128,8 @@ public class KboardIME  extends InputMethodService
     private String getKeyString(int code) {
         if (code == -6) {
             return (mScreen + 1) + "/" + totalScreens;
-        } else if (code < -100 && code >= (-100 - KEYS_PER_SCREEN)) {
-            int indOfKey = -(code + 101 - (mScreen * KEYS_PER_SCREEN));
+        } else if (code < -100 && code >= (-100 - mKeysPerScreen)) {
+            int indOfKey = -(code + 101 - (mScreen * mKeysPerScreen));
             if (indOfKey < keys.size()) {
                 return keys.get(indOfKey);
             } else {
@@ -135,14 +140,6 @@ public class KboardIME  extends InputMethodService
         }
     }
 
-    String ellipsize(String input, int maxLength) {
-        String ellip = "...";
-        if (input == null || input.length() <= maxLength
-                || input.length() < ellip.length()) {
-            return input;
-        }
-        return input.substring(0, maxLength - ellip.length()).concat(ellip);
-    }
 
     public void resetKeyChars() {
         String newString;
@@ -152,7 +149,7 @@ public class KboardIME  extends InputMethodService
                 key.label = "";
             }
             else if(newString != "") {
-                key.label = ellipsize(newString, 18);
+                key.label = newString;
                 key.popupCharacters = newString;
             }
         }
