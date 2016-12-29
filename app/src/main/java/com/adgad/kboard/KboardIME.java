@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 
 
 import com.google.gson.Gson;
+import com.vdurmont.emoji.EmojiManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ public class KboardIME  extends InputMethodService
     private final int KEYS_PER_ROW = 4;
 
 
+
     /**
      * Main initialization of the input method component.  Be sure to call
      * to super class.
@@ -83,8 +85,6 @@ public class KboardIME  extends InputMethodService
 
     private void setKeys() {
         Gson gson = new Gson();
-
-
 
         String defaultJson = gson.toJson((Object) Keys.getDefault());
         String keysAsString = sharedPref.getString(Keys.STORAGE_KEY, defaultJson);
@@ -189,7 +189,6 @@ public class KboardIME  extends InputMethodService
             case -5: //backspace
 
                 commands.d(1);
-
                 break;
             case -6: //MAD
                 switchScreens();

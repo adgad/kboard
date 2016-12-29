@@ -8,8 +8,8 @@ android {
         applicationId "com.adgad.kboard"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 17
-        versionName "3.0.1"
+        versionCode 18
+        versionName "3.0.2"
     }
     buildTypes {
         release {
@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:design:23.1.0'
     compile 'asia.ivity.android:drag-sort-listview:1.0'
     compile 'org.xdty.preference:color-picker:0.0.4'
+    compile 'com.vdurmont:emoji-java:3.1.3'
 }

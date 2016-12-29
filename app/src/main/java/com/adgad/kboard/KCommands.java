@@ -6,12 +6,18 @@ import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 
+import com.vdurmont.emoji.Emoji;
+import com.vdurmont.emoji.EmojiManager;
+import com.vdurmont.emoji.EmojiParser;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by arjun on 27/12/16.
@@ -27,9 +33,9 @@ public class KCommands {
     boolean mAutoSpace;
     boolean mPassiveAggressive;
     List<String> mKeys;
+    Collection<Emoji> mEmoji;
     List<String> mTextKeys = new ArrayList<String>();
     static ArrayDeque<String> buffer = new ArrayDeque<String>();
-
 
     public KCommands(
             InputConnection ic,
@@ -47,6 +53,7 @@ public class KCommands {
                 mTextKeys.add(key);
             }
         }
+        mEmoji = EmojiManager.getAll();
     }
 
     private void commitText(String key) {
@@ -202,9 +209,19 @@ public class KCommands {
     }
 
     public void rnd(int n) {
-        Random random = new Random();
-        int index = random.nextInt(mTextKeys.size());
-        i(1, mTextKeys.get(index));
+        for(int i=0; i<n; i++) {
+            Random random = new Random();
+            int index = random.nextInt(mTextKeys.size());
+            i(1, mTextKeys.get(index));
+        }
+    }
+
+    public void rnde(int n) {
+        for(int i=0; i<n; i++) {
+            Random random = new Random();
+            int index = random.nextInt(mEmoji.size());
+            i(1, ((Emoji) mEmoji.toArray()[index]).getUnicode());
+        }
     }
 
     public void j(int n) {
