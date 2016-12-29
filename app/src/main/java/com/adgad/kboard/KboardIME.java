@@ -170,7 +170,12 @@ public class KboardIME  extends InputMethodService
     @Override
     public void onRelease(int primaryCode) {
         InputConnection ic = getCurrentInputConnection();
-        KCommands commands = new KCommands(ic, getCurrentInputEditorInfo());
+        KCommands commands = new KCommands(
+                ic,
+                getCurrentInputEditorInfo(),
+                keys,
+                mAutoSpace,
+                mPassiveAggressive);
 
         if(mSoundOnClick) {
             playClick();
@@ -184,13 +189,6 @@ public class KboardIME  extends InputMethodService
             case -5: //backspace
 
                 commands.d(1);
-
-                break;
-            case -99: //i'm feeling lucky
-                Random random = new Random();
-                int index = random.nextInt(keys.size());
-
-                sendReply(ic, commands, keys.get(index));
 
                 break;
             case -6: //MAD
@@ -210,10 +208,10 @@ public class KboardIME  extends InputMethodService
                 break;
             default:
                 String keyString = getKeyString(primaryCode);
-                if(keyString.startsWith("/")) {
+                if((keyString.startsWith("/") && keyString.contains("!"))) {
                     parseCommand(commands, keyString);
                 } else {
-                    sendReply(ic, commands, keyString);
+                    sendReply(commands, keyString);
                 }
                 break;
             }
@@ -225,23 +223,11 @@ public class KboardIME  extends InputMethodService
         kc.e(1, cmdAction);
     }
 
-    public void sendReply(InputConnection ic, KCommands commands, String key) {
-        String word = "";
-        if(mAutoSpace && ic.getTextBeforeCursor(1,0) != null && ic.getTextBeforeCursor(1,0).length() > 0) {
-            word = " ";
-        }
+    public void sendReply(KCommands commands, String key) {
         if(key == "NO_VALUE") {
             key = "";
         }
-        if(mPassiveAggressive) {
-            String lastLetter = key.substring(key.length() - 1);
-            key = key.substring(0,1).toUpperCase() + key.substring(1);
-            key = key.replace('!', '.');
-            if(lastLetter != lastLetter.toUpperCase()) {
-                key = key + ".";
-            }
-        }
-        ic.commitText(word + key, 1);
+        commands.i(1, key);
         if(mAutoSend) {
             commands.s(1);
         }

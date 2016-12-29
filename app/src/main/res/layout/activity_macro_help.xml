@@ -48,7 +48,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" d=delete previous character \n\n dw=delete previous word \n\n dd=delete all \n\n yy=copy all \n\n y=copy selection \n\n p=paste from clipboard \n\n i(text)=output the content of the brackets ($0 gets replaced with the last deleted/copied content) \n\n upper(text)=as o, but in upper case \n\n lower(text)=as o, but lower case \n\n j=move cursor back by a character \n\n k=move cursor forward by a character \n\n b=move cursor back by a word \n\n w=move cursor forward by a word \n\n ^ = go to start of line \n\n $ = go to end of line \n\n s=trigger a send command \n\n e(...)=execute the command in the brackets"
+            android:text=" d=delete previous character \n\n dw=delete previous word \n\n dd=delete all \n\n yy=copy all \n\n y=copy selection \n\n p=paste from clipboard \n\n i(text)=output the content of the brackets ($0 gets replaced with the last deleted/copied content) \n\n upper(text)=as o, but in upper case \n\n lower(text)=as o, but lower case \n\n j=move cursor back by a character \n\n k=move cursor forward by a character \n\n b=move cursor back by a word \n\n w=move cursor forward by a word \n\n ^ = go to start of line \n\n $ = go to end of line \n\n rnd=output a random key from your kboard keys \n\n s=trigger a send command \n\n e(...)=execute the command in the brackets"
             android:id="@+id/textView6"
             android:layout_gravity="center_horizontal"  />
 

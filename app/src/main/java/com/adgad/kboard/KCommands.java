@@ -9,7 +9,9 @@ import android.view.inputmethod.InputConnection;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 
 /**
  * Created by arjun on 27/12/16.
@@ -22,13 +24,47 @@ public class KCommands {
 
     InputConnection inputConnection;
     EditorInfo inputEditor;
+    boolean mAutoSpace;
+    boolean mPassiveAggressive;
+    List<String> mKeys;
+    List<String> mTextKeys = new ArrayList<String>();
     static ArrayDeque<String> buffer = new ArrayDeque<String>();
 
-    public KCommands(InputConnection ic, EditorInfo ei) {
+
+    public KCommands(
+            InputConnection ic,
+            EditorInfo ei,
+            List<String> keys,
+            boolean autoSpace,
+            boolean passiveAggressive) {
         inputConnection = ic;
         inputEditor = ei;
+        mAutoSpace = autoSpace;
+        mPassiveAggressive = passiveAggressive;
+        mKeys = keys;
+        for (String key: mKeys) {
+            if (!(key.startsWith("/") && key.contains("!"))) {
+                mTextKeys.add(key);
+            }
+        }
     }
 
+    private void commitText(String key) {
+        String word = "";
+        if(mAutoSpace && inputConnection.getTextBeforeCursor(1,0) != null && inputConnection.getTextBeforeCursor(1,0).length() > 0) {
+            word = " ";
+        }
+
+        if(mPassiveAggressive) {
+            String lastLetter = key.substring(key.length() - 1);
+            key = key.substring(0,1).toUpperCase() + key.substring(1);
+            key = key.replace('!', '.');
+            if(lastLetter != lastLetter.toUpperCase()) {
+                key = key + ".";
+            }
+        }
+        inputConnection.commitText(word + key, 1);
+    }
 
     private int getCursorPosition() {
         ExtractedText extracted = inputConnection.getExtractedText(
@@ -116,9 +152,9 @@ public class KCommands {
         for(int i=0;i<n;i++) {
             String lastBufferWord = buffer.peek();
             if (lastBufferWord != null) {
-                inputConnection.commitText(parameter.replaceAll("\\$0", lastBufferWord), 1);
+                commitText(parameter.replaceAll("\\$0", lastBufferWord));
             } else {
-                inputConnection.commitText(parameter, 1);
+                commitText(parameter);
             }
         }
 
@@ -163,6 +199,12 @@ public class KCommands {
                 inputConnection.commitText(parameter.toLowerCase(), 1);
             }
         }
+    }
+
+    public void rnd(int n) {
+        Random random = new Random();
+        int index = random.nextInt(mTextKeys.size());
+        i(1, mTextKeys.get(index));
     }
 
     public void j(int n) {
