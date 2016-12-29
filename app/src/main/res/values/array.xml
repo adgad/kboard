@@ -700,4 +700,14 @@
         <item>"8"</item>
     </string-array>
 
+    <string-array name="fontsizes">
+        <item>"24"</item>
+        <item>"28"</item>
+        <item>"32"</item>
+        <item>"36"</item>
+        <item>"40"</item>
+        <item>"44"</item>
+        <item>"48"</item>
+    </string-array>
+
 </resources>

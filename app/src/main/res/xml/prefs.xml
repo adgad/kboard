@@ -48,6 +48,16 @@
             android:defaultValue="true"
             android:summary="Keyboard font is bold."
             />
+        <ListPreference
+            android:key="rows"
+            android:title="Number of Rows"
+            android:entries="@array/rows"
+            android:entryValues="@array/rows"/>
+        <ListPreference
+            android:key="fontsize"
+            android:title="Font Size"
+            android:entries="@array/fontsizes"
+            android:entryValues="@array/fontsizes"/>
         <CheckBoxPreference
             android:key="spacing"
             android:title="Key border"
@@ -82,12 +92,7 @@
             android:summary="Automatically capitalize words and end with full stops."
             android:defaultValue="false"
             android:persistent="true" />
-        <ListPreference
-            android:key="rows"
-            android:title="Number of Rows"
-            android:entries="@array/rows"
-            android:entryValues="@array/rows"
-            android:persistent="true"/>
+
     </PreferenceCategory>
 
 

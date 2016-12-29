@@ -69,7 +69,7 @@ public class KboardView extends KeyboardView {
         int borderColor = sharedPref.getInt("bgcolor", R.color.md_teal200);
         int pressedColor = sharedPref.getInt("pressedcolor", R.color.md_teal500);
         int textColor = sharedPref.getInt("textcolor", R.color.material_black);
-        String textSize = sharedPref.getString("textsize", "medium");
+        int textSize = Integer.parseInt(sharedPref.getString("fontsize", "36"));
         boolean spacing = sharedPref.getBoolean("spacing", false);
         int radius = 5;
         boolean isBold = sharedPref.getBoolean("textBold", true);
@@ -118,9 +118,9 @@ public class KboardView extends KeyboardView {
                 String label = key.popupCharacters != null ? key.popupCharacters.toString() : key.label.toString();
                 boolean isCommandKey = label != null && label.length() > 2 && label.charAt(0) == '/' && label.indexOf("!") > 0;
                 if(key.codes[0] == 10) {
-                    mPaint.setTextSize(68); //enter icon is small so make it bigger
+                    mPaint.setTextSize(textSize + 32); //enter icon is small so make it bigger
                 } else {
-                    mPaint.setTextSize(34);
+                    mPaint.setTextSize(textSize);
                 }
                 if (isCommandKey) {
                     label = label.substring(1, label.indexOf("!"));
