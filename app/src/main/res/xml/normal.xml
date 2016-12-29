@@ -38,7 +38,7 @@
 
         <Key android:codes="-201"  android:keyWidth="20%p"  android:keyIcon="@drawable/ic_ime_switcher_dark"/>
         <Key android:codes="-301" android:keyWidth="20%p" android:keyIcon="@drawable/ic_settings_white_24dp" />
-        <Key android:codes="10"  android:keyWidth="20%p"  android:keyLabel="\u21b5"  android:keyEdgeFlags="right"/>
+        <Key android:codes="10"  android:keyWidth="20%p" android:keyLabel="\u21b5"  android:keyEdgeFlags="right"/>
 
     </Row>
 </Keyboard>

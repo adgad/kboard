@@ -116,6 +116,11 @@ public class KboardView extends KeyboardView {
             } else if(key.label != null) {
                 String label = key.popupCharacters != null ? key.popupCharacters.toString() : key.label.toString();
                 boolean isCommandKey = label.charAt(0) == '/' && label.indexOf("!") > 0;
+                if(key.codes[0] == 10) {
+                    mPaint.setTextSize(68); //enter icon is small so make it bigger
+                } else {
+                    mPaint.setTextSize(34);
+                }
                 if (isCommandKey) {
                     label = label.substring(1, label.indexOf("!"));
                     mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, isBold ? Typeface.ITALIC : Typeface.BOLD_ITALIC));
