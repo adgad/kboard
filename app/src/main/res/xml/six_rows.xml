@@ -41,7 +41,13 @@
         <Key android:codes="-119"   android:keyLabel="TEST" />
         <Key android:codes="-120"   android:keyLabel="TEST" />
     </Row>
+    <Row>
 
+        <Key android:codes="-121"   android:keyLabel="TEST" />
+        <Key android:codes="-122"   android:keyLabel="TEST" />
+        <Key android:codes="-123"   android:keyLabel="TEST" />
+        <Key android:codes="-124"   android:keyLabel="TEST" />
+    </Row>
     <Row android:keyHeight="45dp"
         >
         <Key android:codes="-6" android:keyLabel="\u21EA"

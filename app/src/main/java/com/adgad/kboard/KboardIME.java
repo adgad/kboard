@@ -98,7 +98,13 @@ public class KboardIME  extends InputMethodService
 
     private void setKeyboard() {
         String numberOfRows = sharedPref.getString("rows", "3");
-        if(numberOfRows.equals("5")) {
+        if(numberOfRows.equals("8")) {
+            keyboard = new KBoard(this, R.xml.eight_rows);
+        } else if (numberOfRows.equals("7")) {
+            keyboard = new KBoard(this, R.xml.seven_rows);
+        } else if (numberOfRows.equals("6")) {
+            keyboard = new KBoard(this, R.xml.six_rows);
+        } else if (numberOfRows.equals("5")) {
             keyboard = new KBoard(this, R.xml.five_rows);
         } else if (numberOfRows.equals("4")) {
             keyboard = new KBoard(this, R.xml.four_rows);
@@ -147,6 +153,7 @@ public class KboardIME  extends InputMethodService
             newString = getKeyString(key.codes[0]);
             if(newString == "NO_VALUE") {
                 key.label = "";
+                key.popupCharacters = "";
             }
             else if(newString != "") {
                 key.label = newString;
@@ -224,7 +231,7 @@ public class KboardIME  extends InputMethodService
 
     public void sendReply(KCommands commands, String key) {
         if(key == "NO_VALUE") {
-            key = "";
+            return;
         }
         commands.i(1, key);
         if(mAutoSend) {
