@@ -208,11 +208,19 @@ public class KCommands {
         }
     }
 
-    public void rnd(int n) {
+    public void rnd(int n, String parameter) {
+        List<String> textKeys = new ArrayList<String>();
+        if(parameter!= null && parameter.length() > 0) {
+            for(String word : parameter.split(";", 100)) {
+                textKeys.add(word);
+            };
+        } else {
+            textKeys = mTextKeys;
+        }
         for(int i=0; i<n; i++) {
             Random random = new Random();
-            int index = random.nextInt(mTextKeys.size());
-            i(1, mTextKeys.get(index));
+            int index = random.nextInt(textKeys.size());
+            i(1, textKeys.get(index));
         }
     }
 

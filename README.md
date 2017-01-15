@@ -60,6 +60,7 @@ Some commands take parameters in parentheses. The full list of available command
 * `s` trigger a send command
 * `e(...)` execute the command in the brackets
 * `rnd` output a random kboard key
+* `rnd(word1;word2;...)` output a random word from the comma separated list
 * `rnde` output a random emoji
 
 **Examples of use**
