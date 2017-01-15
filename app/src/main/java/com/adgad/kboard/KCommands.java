@@ -14,7 +14,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
@@ -35,6 +37,7 @@ public class KCommands {
     List<String> mKeys;
     Collection<Emoji> mEmoji;
     List<String> mTextKeys = new ArrayList<String>();
+    Map<String,String> mCommandKeys = new HashMap<>();
     String buffer = null;
 
     public KCommands(
@@ -51,6 +54,8 @@ public class KCommands {
         for (String key: mKeys) {
             if (!(key.startsWith("/") && key.contains("!"))) {
                 mTextKeys.add(key);
+            } else {
+                mCommandKeys.put(key.split("!", 2)[0].substring(1), key.split("!", 2)[1]);
             }
         }
         mEmoji = EmojiManager.getAll();
@@ -375,7 +380,7 @@ public class KCommands {
                     String[] commandMethodParts = command.split("(\\((?!\\))|,|(?<!\\()\\))"); //split out parameter in brackets
                     if(commandMethodParts.length > 1) { //has parameter
                         commandMethod = commandMethodParts[0];
-                        parameter = commandMethodParts[1].replaceFirst("\\$0", buffer);
+                        parameter = commandMethodParts[1].replaceAll("\\$0", buffer);
                     } else {
                         commandMethod = commandMethodParts[0];
                     }
@@ -421,6 +426,9 @@ public class KCommands {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
+            if(mCommandKeys.containsKey(cmd)) {
+                e(n, mCommandKeys.get(cmd));
+            }
             e.printStackTrace();
         }
         inputConnection.endBatchEdit();
