@@ -35,7 +35,7 @@ public class KCommands {
     List<String> mKeys;
     Collection<Emoji> mEmoji;
     List<String> mTextKeys = new ArrayList<String>();
-    static ArrayDeque<String> buffer = new ArrayDeque<String>();
+    String buffer = null;
 
     public KCommands(
             InputConnection ic,
@@ -84,7 +84,7 @@ public class KCommands {
 
     //delete character
     public void d(int n) {
-        buffer.push(inputConnection.getTextBeforeCursor(n, 0).toString());
+        buffer = (inputConnection.getTextBeforeCursor(n, 0).toString());
         for(int i=0;i < n; i++) {
             inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
             inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
@@ -111,7 +111,7 @@ public class KCommands {
             buf += lastWord;
             inputConnection.deleteSurroundingText(lastWord.length(), 0);
         }
-       buffer.push(buf);
+       buffer = (buf);
     }
 
     //delete to a character
@@ -133,13 +133,13 @@ public class KCommands {
             buf += (parameter + lastWord);
             inputConnection.deleteSurroundingText(lastWord.length() + parameter.length(), 0);
         }
-        buffer.push(buf);
+        buffer = (buf);
     }
 
     //delete everything
     public void dd(int n) {
         inputConnection.performContextMenuAction(android.R.id.selectAll);
-        buffer.push(inputConnection.getSelectedText(0).toString());
+        buffer = (inputConnection.getSelectedText(0).toString());
         inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
         inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
     }
@@ -148,23 +148,22 @@ public class KCommands {
     public void yy(int n) {
         int currentPosition = getCursorPosition();
         inputConnection.performContextMenuAction(android.R.id.selectAll);
-        buffer.push(inputConnection.getSelectedText(0).toString());
+        buffer = (inputConnection.getSelectedText(0).toString());
         inputConnection.performContextMenuAction(android.R.id.copy);
         inputConnection.setSelection(currentPosition, currentPosition);
     }
 
     //copy selected
     public void y(int n) {
-        buffer.push(inputConnection.getSelectedText(0).toString());
+        buffer = (inputConnection.getSelectedText(0).toString());
         inputConnection.performContextMenuAction(android.R.id.copy);
     }
 
     //insert text
     public void i(int n, String parameter) {
         for(int i=0;i<n;i++) {
-            String lastBufferWord = buffer.peek();
-            if (lastBufferWord != null) {
-                commitText(parameter.replaceAll("\\$0", lastBufferWord));
+            if (buffer != null) {
+                commitText(parameter.replaceAll("\\$0", buffer));
             } else {
                 commitText(parameter);
             }
@@ -175,9 +174,8 @@ public class KCommands {
     //insert text raw (without autospace etc)
     public void iraw(int n, String parameter) {
         for(int i=0;i<n;i++) {
-            String lastBufferWord = buffer.peek();
-            if (lastBufferWord != null) {
-                inputConnection.commitText(parameter.replaceAll("\\$0", lastBufferWord), 1);
+            if (buffer != null) {
+                inputConnection.commitText(parameter.replaceAll("\\$0", buffer), 1);
             } else {
                 inputConnection.commitText(parameter, 1);
             }
@@ -190,7 +188,7 @@ public class KCommands {
         String from =parameter.split(";")[0];
         String to = parameter.split(";")[1];
         dd(1);
-        String contents = buffer.peek();
+        String contents = buffer;
         inputConnection.commitText(contents.replaceAll(from, to), 1);
 
     }
@@ -204,7 +202,7 @@ public class KCommands {
 
     //paste from buffer
     public void p(int n) {
-        String str = buffer.peek();
+        String str = buffer;
         if(str != null) {
             for(int i=0;i<n;i++) {
                 inputConnection.commitText(str, 0);
@@ -225,7 +223,7 @@ public class KCommands {
     //make uppercase
     public void upper(int n, String parameter) {
         for(int i=0;i<n;i++) {
-            String lastBufferWord = buffer.peek();
+            String lastBufferWord = buffer;
             if (lastBufferWord != null) {
                 inputConnection.commitText(parameter.replaceAll("\\$0", lastBufferWord).toUpperCase(), 1);
             } else {
@@ -237,7 +235,7 @@ public class KCommands {
     //make lowercase
     public void lower(int n, String parameter) {
         for(int i=0;i<n;i++) {
-            String lastBufferWord = buffer.peek();
+            String lastBufferWord = buffer;
             if (lastBufferWord != null) {
                 inputConnection.commitText(parameter.replaceAll("\\$0", lastBufferWord).toLowerCase(), 1);
             } else {
@@ -377,7 +375,7 @@ public class KCommands {
                     String[] commandMethodParts = command.split("(\\((?!\\))|,|(?<!\\()\\))"); //split out parameter in brackets
                     if(commandMethodParts.length > 1) { //has parameter
                         commandMethod = commandMethodParts[0];
-                        parameter = commandMethodParts[1].replaceFirst("\\$0", buffer.peek());
+                        parameter = commandMethodParts[1].replaceFirst("\\$0", buffer);
                     } else {
                         commandMethod = commandMethodParts[0];
                     }
