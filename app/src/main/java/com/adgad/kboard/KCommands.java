@@ -11,6 +11,7 @@ import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
 
 import java.lang.reflect.InvocationTargetException;
+import java.nio.Buffer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -89,11 +90,11 @@ public class KCommands {
 
     //delete character
     public void d(int n) {
-        String selected = (inputConnection.getSelectedText(0).toString());
-        if(selected.isEmpty()) {
+        CharSequence selected = inputConnection.getSelectedText(0);
+        if(selected == null || selected.length() == 0 ) {
             buffer = (inputConnection.getTextBeforeCursor(n, 0).toString());
         } else {
-            buffer = selected;
+            buffer = selected.toString();
         }
         for(int i=0;i < n; i++) {
             inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
