@@ -89,7 +89,12 @@ public class KCommands {
 
     //delete character
     public void d(int n) {
-        buffer = (inputConnection.getTextBeforeCursor(n, 0).toString());
+        String selected = (inputConnection.getSelectedText(0).toString());
+        if(selected.isEmpty()) {
+            buffer = (inputConnection.getTextBeforeCursor(n, 0).toString());
+        } else {
+            buffer = selected;
+        }
         for(int i=0;i < n; i++) {
             inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
             inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));

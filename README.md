@@ -49,8 +49,10 @@ Some commands take parameters in parentheses. The full list of available command
 * `dt(char)` - deletes (backwards) up to and including the specified character
 * `yy` copy all
 * `y` copy selection
-* `p` paste from clipboard
+* `p` paste from buffer
+* `pc` paste from clipboard
 * `i(text)` output the content of the brackets ($0 gets replaced * with the last deleted/copied content)
+* `iraw(text)` as i, but does not adhere to settings such as autospace or Passive Aggressive
 * `upper(text)` as i, but in upper case
 * `lower(text)` as i, but lower case
 * `j` move cursor back by a character
@@ -62,6 +64,7 @@ Some commands take parameters in parentheses. The full list of available command
 * `rnd` output a random kboard key
 * `rnd(word1;word2;...)` output a random word from the comma separated list
 * `rnde` output a random emoji
+* `fr(from;to)` replace all instances of `from` to `to`
 
 **Examples of use**
 
@@ -84,6 +87,10 @@ Some commands take parameters in parentheses. The full list of available command
 `/emojigame!10rnde` - outputs 10 random emoji
 
 `/feeling lucky!rnd,s` - sends a random kboard key
+
+`/birthday!dw,rnd(Happy Birthday name;Hey name, happy birthday.;hb2u;Have a great day name),fr(name,$0)` - write a name, then press this key to send a random birthday message to this name
+
+`/bdaysend!birthday,s` - Can also have commands that refer to other command keys you've made'
 
 ====
 
