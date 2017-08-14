@@ -170,6 +170,13 @@ public class KCommands {
         inputConnection.performContextMenuAction(android.R.id.copy);
     }
 
+    //select all
+    public void sa(int n) {
+        int currentPosition = getCursorPosition();
+        inputConnection.performContextMenuAction(android.R.id.selectAll);
+    }
+
+
     //insert text
     public void i(int n, String parameter) {
         for(int i=0;i<n;i++) {

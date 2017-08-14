@@ -51,6 +51,7 @@ Some commands take parameters in parentheses. The full list of available command
 * `y` copy selection
 * `p` paste from buffer
 * `pc` paste from clipboard
+* `y` select all
 * `i(text)` output the content of the brackets ($0 gets replaced * with the last deleted/copied content)
 * `iraw(text)` as i, but does not adhere to settings such as autospace or Passive Aggressive
 * `upper(text)` as i, but in upper case
