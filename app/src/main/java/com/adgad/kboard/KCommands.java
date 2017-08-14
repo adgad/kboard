@@ -262,6 +262,11 @@ public class KCommands {
         }
     }
 
+    //random from kboard keys
+    public void rnd(int n) {
+        rnd(n, null);
+    }
+
     //random from list or all kboard keys
     public void rnd(int n, String parameter) {
         List<String> textKeys = new ArrayList<String>();
