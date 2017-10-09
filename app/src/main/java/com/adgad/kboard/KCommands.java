@@ -64,11 +64,11 @@ public class KCommands {
 
     private void commitText(String key) {
         String word = "";
-        if(mAutoSpace && inputConnection.getTextBeforeCursor(1,0) != null && inputConnection.getTextBeforeCursor(1,0).length() > 0) {
+        if(mAutoSpace && inputConnection != null && inputConnection.getTextBeforeCursor(1,0) != null && inputConnection.getTextBeforeCursor(1,0).length() > 0) {
             word = " ";
         }
 
-        if(mPassiveAggressive) {
+        if(mPassiveAggressive && key.length() > 0) {
             String lastLetter = key.substring(key.length() - 1);
             key = key.substring(0,1).toUpperCase() + key.substring(1);
             key = key.replace('!', '.');
@@ -91,6 +91,7 @@ public class KCommands {
     //delete character
     public void d(int n) {
         CharSequence selected = inputConnection.getSelectedText(0);
+
         if(selected == null || selected.length() == 0 ) {
             buffer = (inputConnection.getTextBeforeCursor(n, 0).toString());
         } else {
@@ -444,7 +445,7 @@ public class KCommands {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
-            if(mCommandKeys.containsKey(cmd)) {
+            if(mCommandKeys.containsKey(cmd) && inputConnection != null) {
                 e(n, mCommandKeys.get(cmd));
             }
             e.printStackTrace();

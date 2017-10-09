@@ -106,14 +106,17 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, int index) {
         TextView t = (TextView) dialog.getDialog().findViewById(R.id.word);
-        if(index >= 0) {
-            keys.set(index, t.getText().toString());
-        } else {
-            keys.add(t.getText().toString());
+        String text = t.getText().toString();
+        if(text.length() > 0) {
+            if (index >= 0) {
+                keys.set(index, t.getText().toString());
+            } else {
+                keys.add(t.getText().toString());
 
+            }
+            listAdapter.notifyDataSetChanged();
+            updateWords();
         }
-        listAdapter.notifyDataSetChanged();
-        updateWords();
         dialog.dismiss();
     }
 
