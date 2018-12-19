@@ -68,11 +68,12 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
                         final int toPos = target.getAdapterPosition();
 
                         adapter.swap(fromPos, toPos);
-                        // move item in `fromPos` to `toPos` in adapter.
                         return true;// true if moved, false otherwise
                     }
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                        // remove from adapter
+                        final int fromPos = viewHolder.getAdapterPosition();
+                        adapter.remove(fromPos);
+                        return;
                     }
                 });
 
