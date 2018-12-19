@@ -1,11 +1,14 @@
 package com.adgad.kboard;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,13 +22,13 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
-public class CustomKeysActivity extends ListActivity implements AddWordDialogFragment.AddWordDialogListener {
+public class CustomKeysActivity extends Activity implements AddWordDialogFragment.AddWordDialogListener {
 
 
     private ArrayList<String> keys;
     private SharedPreferences sharedPref;
     private final Gson gson = new Gson();
-    private ArrayAdapter<String> listAdapter;
+    private RecyclerListAdapter adapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -46,13 +49,17 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
         String keysAsString = sharedPref.getString(KboardIME.Keys.STORAGE_KEY, defaultJson);
         keys = gson.fromJson(keysAsString, ArrayList.class);
 
-        listAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, keys);
-        // TODO: Change Adapter to display your content
-        ListView list = getListView();
-        list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        RecyclerView recyclerView =  findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        setListAdapter(listAdapter);
+        adapter = new RecyclerListAdapter(keys, new ItemViewHolder.ItemClickListener() {
+            @Override
+            public void onItemClick(View caller, int position) {
+                showAddDialog(position, keys.get(position));
+            }
+        });
+        recyclerView.setAdapter(adapter);
 
         FloatingActionButton myFab = findViewById(R.id.myFab);
         myFab.setOnClickListener(new View.OnClickListener() {
@@ -73,12 +80,6 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
         newFragment.show(getFragmentManager(), "new_word");
     }
 
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
-        showAddDialog(position, keys.get(position));
-    }
-
     private void updateWords() {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(KboardIME.Keys.STORAGE_KEY, gson.toJson(keys));
@@ -91,12 +92,11 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
         String text = t.getText().toString();
         if(text.length() > 0) {
             if (index >= 0) {
-                keys.set(index, t.getText().toString());
+                adapter.set(index, t.getText().toString());
             } else {
-                keys.add(t.getText().toString());
+                adapter.add(t.getText().toString());
 
             }
-            listAdapter.notifyDataSetChanged();
             updateWords();
         }
         dialog.dismiss();
@@ -105,8 +105,7 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
     @Override
     public void onDialogNegativeClick(DialogFragment dialog, int index) {
         if(index > 0) {
-            keys.remove(index);
-            listAdapter.notifyDataSetChanged();
+            adapter.remove(index);
             updateWords();
         }
         dialog.dismiss();
@@ -116,9 +115,8 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
     public void onDialogNeutralClick(DialogFragment dialog, int index) {
         if(index > 0) {
             String item = keys.get(index);
-            keys.remove(index);
-            keys.add(index-1, item);
-            listAdapter.notifyDataSetChanged();
+            adapter.remove(index);
+            adapter.add(index-1, item);
             updateWords();
 
         }
@@ -129,9 +127,8 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.reset:
-                keys.clear();
-                keys.addAll(KboardIME.Keys.getDefault());
-                listAdapter.notifyDataSetChanged();
+                adapter.clear();
+                adapter.addAll(KboardIME.Keys.getDefault());
                 updateWords();
                 Toast toast = Toast.makeText(this.getBaseContext(), "Reset keys to defaults!", Toast.LENGTH_SHORT);
                 toast.show();
