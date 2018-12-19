@@ -73,7 +73,6 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
                     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                         final int fromPos = viewHolder.getAdapterPosition();
                         adapter.remove(fromPos);
-                        return;
                     }
                 });
 

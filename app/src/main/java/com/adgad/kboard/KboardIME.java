@@ -49,7 +49,7 @@ public class KboardIME  extends InputMethodService
     private boolean mSoundOnClick;
     private int mScreen = 0;
     private int totalScreens = 0;
-    private int mRows = 3;
+    private int mRows = 5;
     private int mKeysPerScreen = 12;
     private final int KEYS_PER_ROW = 4;
 
@@ -76,7 +76,7 @@ public class KboardIME  extends InputMethodService
         mVibrateOnClick = sharedPref.getBoolean("vibrate_on", false);
         mSoundOnClick = sharedPref.getBoolean("sound_on", false);
         mPassiveAggressive = sharedPref.getBoolean("passive_aggressive", false);
-        mRows = Integer.parseInt(sharedPref.getString("rows", "3"));
+        mRows = Integer.parseInt(sharedPref.getString("rows", "5"));
         mKeysPerScreen = mRows * KEYS_PER_ROW;
         setKeys();
 
@@ -97,16 +97,15 @@ public class KboardIME  extends InputMethodService
     }
 
     private void setKeyboard() {
-        String numberOfRows = sharedPref.getString("rows", "3");
-        if(numberOfRows.equals("8")) {
+        if(mRows == 8) {
             keyboard = new KBoard(this, R.xml.eight_rows);
-        } else if (numberOfRows.equals("7")) {
+        } else if (mRows == 7) {
             keyboard = new KBoard(this, R.xml.seven_rows);
-        } else if (numberOfRows.equals("6")) {
+        } else if (mRows == 6) {
             keyboard = new KBoard(this, R.xml.six_rows);
-        } else if (numberOfRows.equals("5")) {
+        } else if (mRows == 5) {
             keyboard = new KBoard(this, R.xml.five_rows);
-        } else if (numberOfRows.equals("4")) {
+        } else if (mRows == 4) {
             keyboard = new KBoard(this, R.xml.four_rows);
         } else {
             keyboard = new KBoard(this, R.xml.normal);
@@ -309,13 +308,23 @@ public class KboardIME  extends InputMethodService
             ArrayList<String> defaultKeys = new ArrayList<>();
             defaultKeys.add("k");
             defaultKeys.add("lol!");
+            defaultKeys.add("Good thanks, yourself?");
             defaultKeys.add("thanks");
             defaultKeys.add("👍");
             defaultKeys.add("ಠ_ಠ");
             defaultKeys.add("haha");
             defaultKeys.add("¯\\_(ツ)_/¯");
-            defaultKeys.add("see you later!");
+            defaultKeys.add("/exec!dt(!),e($0)");
             defaultKeys.add("\uD83D\uDE12");
+
+            defaultKeys.add("/🅰🅱🅲!ds,fancy(darksquare)");
+            defaultKeys.add("/🄰🄱🄲!ds,fancy(square)");
+            defaultKeys.add("/🅐🅑🅒!ds,fancy(darkcircle)");
+            defaultKeys.add("/ⓐⓑⓒ!ds,fancy(circle)");
+            defaultKeys.add("/𝚊𝚋𝚌!ds,fancy(monospace)");
+            defaultKeys.add("/𝕒𝕓𝕔!ds,fancy(double)");
+            defaultKeys.add("/𝔞𝔟𝔠!ds,fancy(fancy)");
+            defaultKeys.add("/𝖆𝖇𝖈!ds,fancy(fancybold)");
 
             defaultKeys.add("ಥ_ಥ");
             defaultKeys.add("thank you");
@@ -323,8 +332,6 @@ public class KboardIME  extends InputMethodService
             defaultKeys.add("( ͡° \u035Cʖ ͡°)");
             defaultKeys.add("(╯°□°）╯︵ ┻━┻");
             defaultKeys.add("hey!");
-            defaultKeys.add("Good thanks, yourself?");
-            defaultKeys.add("Where are you?");
             defaultKeys.add("cool");
 
             defaultKeys.add("yes");

@@ -81,7 +81,11 @@ Some commands take parameters in parentheses. The full list of available command
 
 `/rly sad!1000i(😥)`
 
-`/exec!dt(!),e($0)` - this is quite a powerful key to have, it enables you to write and execute commands inline in a text field by writing e.g. `!10e(^, i(* ), ^)` and hitting the exec key
+`/darkcircle!ds,fancy(darkcircle)` - replaces selection or everything with 🅣🅔🅧🅣 🅛🅘🅚🅔 🅣🅗🅘🅢. Choose from `circle`, `darkcircle`, `square`,`darksquare`,`double`,`monospace`,`fancy`,`fancybold`.
+
+_Warning_: weird unicode characters look cool but break accessibility software, so please don't use in public places!
+
+`/exec!dt(!),e($0)` - this is meta, it enables you to write and execute commands inline in a text field by writing e.g. `!10e(^, i(* ), ^)` and hitting the exec key
 
 `/bullets!10e(^, i(* ), ^)` - prepends "* " the the previous 10 lines
 
