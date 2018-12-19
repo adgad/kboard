@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.mobeta.android.dslv.DragSortListView;
 
 import java.util.ArrayList;
 
@@ -27,22 +26,6 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
     private SharedPreferences sharedPref;
     private final Gson gson = new Gson();
     private ArrayAdapter<String> listAdapter;
-
-    private DragSortListView.DropListener onDrop =
-            new DragSortListView.DropListener() {
-                @Override
-                public void drop(int from, int to) {
-                    if (from != to) {
-                        DragSortListView list = getListView();
-                        String item = listAdapter.getItem(from);
-                        listAdapter.remove(item);
-                        listAdapter.insert(item, to);
-                        list.moveCheckState(from, to);
-                        updateWords();
-
-                    }
-                }
-            };
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -63,16 +46,15 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
         String keysAsString = sharedPref.getString(KboardIME.Keys.STORAGE_KEY, defaultJson);
         keys = gson.fromJson(keysAsString, ArrayList.class);
 
-        listAdapter = new ArrayAdapter<String>(this,
+        listAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, keys);
         // TODO: Change Adapter to display your content
-        DragSortListView list = getListView();
-        list.setDropListener(onDrop);
+        ListView list = getListView();
         list.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         setListAdapter(listAdapter);
 
-        FloatingActionButton myFab = (FloatingActionButton) findViewById(R.id.myFab);
+        FloatingActionButton myFab = findViewById(R.id.myFab);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 showAddDialog(-1, null);
@@ -100,12 +82,12 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
     private void updateWords() {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(KboardIME.Keys.STORAGE_KEY, gson.toJson(keys));
-        editor.commit();
+        editor.apply();
     }
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, int index) {
-        TextView t = (TextView) dialog.getDialog().findViewById(R.id.word);
+        TextView t = dialog.getDialog().findViewById(R.id.word);
         String text = t.getText().toString();
         if(text.length() > 0) {
             if (index >= 0) {
@@ -130,7 +112,17 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
         dialog.dismiss();
     }
 
+    @Override
+    public void onDialogNeutralClick(DialogFragment dialog, int index) {
+        if(index > 0) {
+            String item = keys.get(index);
+            keys.remove(index);
+            keys.add(index-1, item);
+            listAdapter.notifyDataSetChanged();
+            updateWords();
 
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -138,9 +130,7 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
         switch (item.getItemId()) {
             case R.id.reset:
                 keys.clear();
-                for(String key: KboardIME.Keys.getDefault()) {
-                    keys.add(key);
-                }
+                keys.addAll(KboardIME.Keys.getDefault());
                 listAdapter.notifyDataSetChanged();
                 updateWords();
                 Toast toast = Toast.makeText(this.getBaseContext(), "Reset keys to defaults!", Toast.LENGTH_SHORT);
@@ -155,10 +145,5 @@ public class CustomKeysActivity extends ListActivity implements AddWordDialogFra
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.prefs_menu, menu);
         return true;
-    }
-
-    @Override
-    public DragSortListView getListView() {
-        return (DragSortListView) super.getListView();
     }
 }

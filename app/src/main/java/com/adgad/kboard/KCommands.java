@@ -8,19 +8,15 @@ import android.view.inputmethod.InputConnection;
 
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
-import com.vdurmont.emoji.EmojiParser;
 
 import java.lang.reflect.InvocationTargetException;
-import java.nio.Buffer;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * Created by arjun on 27/12/16.
@@ -29,19 +25,19 @@ import java.util.Set;
 
 public class KCommands {
 
-    public static final int MAX_LOOKBACK = 500;
+    private static final int MAX_LOOKBACK = 500;
 
-    InputConnection inputConnection;
-    EditorInfo inputEditor;
-    boolean mAutoSpace;
-    boolean mPassiveAggressive;
-    List<String> mKeys;
-    Collection<Emoji> mEmoji;
-    List<String> mTextKeys = new ArrayList<String>();
-    Map<String,String> mCommandKeys = new HashMap<>();
-    String buffer = null;
+    private InputConnection inputConnection;
+    private EditorInfo inputEditor;
+    private boolean mAutoSpace;
+    private boolean mPassiveAggressive;
+    private List<String> mKeys;
+    private Collection<Emoji> mEmoji;
+    private List<String> mTextKeys = new ArrayList<>();
+    private Map<String,String> mCommandKeys = new HashMap<>();
+    private String buffer = null;
 
-    public KCommands(
+    KCommands(
             InputConnection ic,
             EditorInfo ei,
             List<String> keys,
@@ -72,7 +68,7 @@ public class KCommands {
             String lastLetter = key.substring(key.length() - 1);
             key = key.substring(0,1).toUpperCase() + key.substring(1);
             key = key.replace('!', '.');
-            if(lastLetter != lastLetter.toUpperCase()) {
+            if(!lastLetter.equals(lastLetter.toUpperCase())) {
                 key = key + ".";
             }
         }
@@ -131,7 +127,7 @@ public class KCommands {
         String buf = "";
         for(int i =0; i<n;i++) {
             final int charactersToGet = 30;
-            final String splitRegexp = parameter;
+            final String splitRegexp = parameter.replace("\\", "\\\\");
 
             // delete trailing spaces
             while (inputConnection.getTextBeforeCursor(1, 0).toString().equals(splitRegexp)) {
@@ -149,7 +145,7 @@ public class KCommands {
     }
 
     //delete everything
-    public void dd(int n) {
+    private void dd(int n) {
         inputConnection.performContextMenuAction(android.R.id.selectAll);
         buffer = (inputConnection.getSelectedText(0).toString());
         inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
@@ -157,7 +153,7 @@ public class KCommands {
     }
 
     //copy all
-    public void yy(int n) {
+    private void yy(int n) {
         int currentPosition = getCursorPosition();
         inputConnection.performContextMenuAction(android.R.id.selectAll);
         buffer = (inputConnection.getSelectedText(0).toString());
@@ -166,20 +162,20 @@ public class KCommands {
     }
 
     //copy selected
-    public void y(int n) {
+    private void y(int n) {
         buffer = (inputConnection.getSelectedText(0).toString());
         inputConnection.performContextMenuAction(android.R.id.copy);
     }
 
     //select all
-    public void sa(int n) {
+    private void sa(int n) {
         int currentPosition = getCursorPosition();
         inputConnection.performContextMenuAction(android.R.id.selectAll);
     }
 
 
     //insert text
-    public void i(int n, String parameter) {
+    void i(int n, String parameter) {
         for(int i=0;i<n;i++) {
             if (buffer != null) {
                 commitText(parameter.replaceAll("\\$0", buffer));
@@ -191,7 +187,7 @@ public class KCommands {
     }
 
     //insert text raw (without autospace etc)
-    public void iraw(int n, String parameter) {
+    private void iraw(int n, String parameter) {
         for(int i=0;i<n;i++) {
             if (buffer != null) {
                 inputConnection.commitText(parameter.replaceAll("\\$0", buffer), 1);
@@ -199,12 +195,16 @@ public class KCommands {
                 inputConnection.commitText(parameter, 1);
             }
         }
+    }
 
+    //
+    private void fancy(int n, String parameter) {
+            inputConnection.commitText(ConvertUnicode.convert(buffer, parameter), 1);
     }
 
     //find and replace
-    public void fr(int n, String parameter) {
-        String from =parameter.split(";")[0];
+    private void fr(int n, String parameter) {
+        String from = parameter.split(";")[0];
         String to = parameter.split(";")[1];
         dd(1);
         String contents = buffer;
@@ -270,11 +270,9 @@ public class KCommands {
 
     //random from list or all kboard keys
     public void rnd(int n, String parameter) {
-        List<String> textKeys = new ArrayList<String>();
+        List<String> textKeys = new ArrayList<>();
         if(parameter!= null && parameter.length() > 0) {
-            for(String word : parameter.split(";", 100)) {
-                textKeys.add(word);
-            };
+            textKeys.addAll(Arrays.asList(parameter.split(";", 100)));
         } else {
             textKeys = mTextKeys;
         }
@@ -377,7 +375,7 @@ public class KCommands {
     }
 
     //execute subcommand
-    public void e(int n, String cmd) {
+    void e(int n, String cmd) {
         //Remove leading !
         if(cmd.startsWith("!")) {
             cmd = cmd.substring(1);
@@ -393,7 +391,7 @@ public class KCommands {
             } else {
                 commands = cmd.split(",");
                 for(String command : commands) {
-                    String commandMethod = null;
+                    String commandMethod;
                     String parameter = null;
                     int numberOfTimes = 1;
                     String[] commandMethodParts = command.split("(\\((?!\\))|,|(?<!\\()\\))"); //split out parameter in brackets
@@ -423,7 +421,7 @@ public class KCommands {
 
     }
 
-    public boolean execute(String cmd, int n, String parameter) {
+    private boolean execute(String cmd, int n, String parameter) {
         inputConnection.beginBatchEdit();
 
         if(cmd.equals("^")) {

@@ -17,8 +17,11 @@ public class AddWordDialogFragment extends DialogFragment {
 
 
     public interface AddWordDialogListener {
-        public void onDialogPositiveClick(DialogFragment dialog, int index);
-        public void onDialogNegativeClick(DialogFragment dialog, int index);
+        void onDialogPositiveClick(DialogFragment dialog, int index);
+        void onDialogNegativeClick(DialogFragment dialog, int index);
+        void onDialogNeutralClick(DialogFragment dialog, int index);
+
+
     }
 
 
@@ -57,6 +60,12 @@ public class AddWordDialogFragment extends DialogFragment {
         builder.setView(view)
                 // Add action buttons
                 .setTitle("Edit Key")
+                .setNeutralButton("Move up", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        mListener.onDialogNeutralClick(AddWordDialogFragment.this, index);
+                    }
+                })
                 .setPositiveButton(index > -1 ? "OK" : "Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
