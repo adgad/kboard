@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 public class CustomKeysActivity extends Activity implements AddWordDialogFragment.AddWordDialogListener {
 
 
-    private ArrayList<String> keys;
     private SharedPreferences sharedPref;
     private final Gson gson = new Gson();
     private RecyclerListAdapter adapter;
@@ -47,20 +47,38 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String defaultJson = gson.toJson(KboardIME.Keys.getDefault());
         String keysAsString = sharedPref.getString(KboardIME.Keys.STORAGE_KEY, defaultJson);
-        keys = gson.fromJson(keysAsString, ArrayList.class);
+        ArrayList<String> keys = gson.fromJson(keysAsString, ArrayList.class);
 
         RecyclerView recyclerView =  findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new RecyclerListAdapter(keys, new ItemViewHolder.ItemClickListener() {
+        adapter = new RecyclerListAdapter(keys, sharedPref, new ItemViewHolder.ItemClickListener() {
             @Override
             public void onItemClick(View caller, int position) {
-                showAddDialog(position, keys.get(position));
+                showAddDialog(position, adapter.get(position));
             }
         });
-        recyclerView.setAdapter(adapter);
 
+        ItemTouchHelper mIth = new ItemTouchHelper(
+                new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
+                    public boolean onMove(RecyclerView recyclerView,
+                                          RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                        final int fromPos = viewHolder.getAdapterPosition();
+                        final int toPos = target.getAdapterPosition();
+
+                        adapter.swap(fromPos, toPos);
+                        // move item in `fromPos` to `toPos` in adapter.
+                        return true;// true if moved, false otherwise
+                    }
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                        // remove from adapter
+                    }
+                });
+
+
+        recyclerView.setAdapter(adapter);
+        mIth.attachToRecyclerView(recyclerView);
         FloatingActionButton myFab = findViewById(R.id.myFab);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -80,11 +98,6 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
         newFragment.show(getFragmentManager(), "new_word");
     }
 
-    private void updateWords() {
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(KboardIME.Keys.STORAGE_KEY, gson.toJson(keys));
-        editor.apply();
-    }
 
     @Override
     public void onDialogPositiveClick(DialogFragment dialog, int index) {
@@ -97,7 +110,6 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
                 adapter.add(t.getText().toString());
 
             }
-            updateWords();
         }
         dialog.dismiss();
     }
@@ -106,7 +118,6 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
     public void onDialogNegativeClick(DialogFragment dialog, int index) {
         if(index > 0) {
             adapter.remove(index);
-            updateWords();
         }
         dialog.dismiss();
     }
@@ -114,11 +125,7 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
     @Override
     public void onDialogNeutralClick(DialogFragment dialog, int index) {
         if(index > 0) {
-            String item = keys.get(index);
-            adapter.remove(index);
-            adapter.add(index-1, item);
-            updateWords();
-
+            adapter.swap(index, index-1);
         }
     }
 
@@ -129,7 +136,6 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
             case R.id.reset:
                 adapter.clear();
                 adapter.addAll(KboardIME.Keys.getDefault());
-                updateWords();
                 Toast toast = Toast.makeText(this.getBaseContext(), "Reset keys to defaults!", Toast.LENGTH_SHORT);
                 toast.show();
                 return true;
