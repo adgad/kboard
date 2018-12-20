@@ -37,7 +37,7 @@ public class KCommands {
     private Map<String,String> mCommandKeys = new HashMap<>();
     private String buffer = null;
 
-    KCommands(
+    public KCommands(
             InputConnection ic,
             EditorInfo ei,
             List<String> keys,
@@ -85,7 +85,7 @@ public class KCommands {
     }
 
     //delete character
-    void d(int n) {
+    public void d(int n) {
         CharSequence selected = inputConnection.getSelectedText(0);
 
         if(selected == null || selected.length() == 0 ) {
@@ -98,7 +98,7 @@ public class KCommands {
     }
 
     //delete previous word
-    void dw(int n) {
+    public void dw(int n) {
         String buf = "";
         for(int i =0; i<n;i++) {
             final int charactersToGet = 30;
@@ -120,7 +120,7 @@ public class KCommands {
     }
 
     //delete to a character
-    void dt(int n, String parameter) {
+    public void dt(int n, String parameter) {
         String buf = "";
         for(int i =0; i<n;i++) {
             final int charactersToGet = 50;
@@ -142,7 +142,7 @@ public class KCommands {
     }
 
     //delete everything
-    void dd(int n) {
+    public void dd(int n) {
         inputConnection.performContextMenuAction(android.R.id.selectAll);
         buffer = (inputConnection.getSelectedText(0).toString());
         inputConnection.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
@@ -150,7 +150,7 @@ public class KCommands {
     }
 
     //delete selected or all
-    void ds(int n) {
+    public void ds(int n) {
         CharSequence selected = inputConnection.getSelectedText(0);
         if(selected == null || selected.length() == 0 ) {
             inputConnection.performContextMenuAction(android.R.id.selectAll);
@@ -160,7 +160,7 @@ public class KCommands {
     }
 
     //copy all
-    void yy(int n) {
+    public void yy(int n) {
         int currentPosition = getCursorPosition();
         inputConnection.performContextMenuAction(android.R.id.selectAll);
         buffer = (inputConnection.getSelectedText(0).toString());
@@ -169,20 +169,20 @@ public class KCommands {
     }
 
     //copy selected
-    void y(int n) {
+    public void y(int n) {
         buffer = (inputConnection.getSelectedText(0).toString());
         inputConnection.performContextMenuAction(android.R.id.copy);
     }
 
     //select all
-    void sa(int n) {
+    public void sa(int n) {
         int currentPosition = getCursorPosition();
         inputConnection.performContextMenuAction(android.R.id.selectAll);
     }
 
 
     //insert text
-    void i(int n, String parameter) {
+    public void i(int n, String parameter) {
         for(int i=0;i<n;i++) {
             if (buffer != null) {
                 commitText(parameter.replaceAll("\\$0", buffer));
@@ -194,7 +194,7 @@ public class KCommands {
     }
 
     //insert text raw (without autospace etc)
-    void iraw(int n, String parameter) {
+    public void iraw(int n, String parameter) {
         for(int i=0;i<n;i++) {
             if (buffer != null) {
                 inputConnection.commitText(parameter.replaceAll("\\$0", buffer), 1);
@@ -205,12 +205,12 @@ public class KCommands {
     }
 
     //
-    void fancy(int n, String parameter) {
+    public void fancy(int n, String parameter) {
             inputConnection.commitText(ConvertUnicode.convert(buffer, parameter), 1);
     }
 
     //find and replace
-    void fr(int n, String parameter) {
+    public void fr(int n, String parameter) {
         String from = parameter.split(";")[0];
         String to = parameter.split(";")[1];
         dd(1);
@@ -220,14 +220,14 @@ public class KCommands {
     }
 
     //send
-    void s(int n) {
+    public void s(int n) {
         if((inputEditor.imeOptions & EditorInfo.IME_MASK_ACTION) == EditorInfo.IME_ACTION_SEND) {
             inputConnection.performEditorAction(EditorInfo.IME_ACTION_SEND);
         }
     }
 
     //paste from buffer
-    void p(int n) {
+    public void p(int n) {
         String str = buffer;
         if(str != null) {
             for(int i=0;i<n;i++) {
@@ -240,14 +240,14 @@ public class KCommands {
     }
 
     //paste from clipboard
-    void pc(int n) {
+    public void pc(int n) {
         for(int i=0;i<n;i++) {
             inputConnection.performContextMenuAction(android.R.id.paste);
         }
     }
 
     //make uppercase
-    void upper(int n, String parameter) {
+    public void upper(int n, String parameter) {
         for(int i=0;i<n;i++) {
             String lastBufferWord = buffer;
             if (lastBufferWord != null) {
@@ -259,7 +259,7 @@ public class KCommands {
     }
 
     //make lowercase
-    void lower(int n, String parameter) {
+    public void lower(int n, String parameter) {
         for(int i=0;i<n;i++) {
             String lastBufferWord = buffer;
             if (lastBufferWord != null) {
@@ -271,12 +271,12 @@ public class KCommands {
     }
 
     //random from kboard keys
-    void rnd(int n) {
+    public void rnd(int n) {
         rnd(n, null);
     }
 
     //random from list or all kboard keys
-    void rnd(int n, String parameter) {
+    public void rnd(int n, String parameter) {
         List<String> textKeys = new ArrayList<>();
         if(parameter!= null && parameter.length() > 0) {
             textKeys.addAll(Arrays.asList(parameter.split(";", 100)));
@@ -291,7 +291,7 @@ public class KCommands {
     }
 
     //random emoji
-    void rnde(int n) {
+    public void rnde(int n) {
         for(int i=0; i<n; i++) {
             Random random = new Random();
             int index = random.nextInt(mEmoji.size());
@@ -300,7 +300,7 @@ public class KCommands {
     }
 
     //move cursor left
-    void j(int n) {
+    public void j(int n) {
         int position = getCursorPosition() - n;
         if(position < 0) {
             position = 0;
@@ -309,7 +309,7 @@ public class KCommands {
     }
 
     //move cursor right
-    void k(int n) {
+    public void k(int n) {
         int position = getCursorPosition() + n;
         CharSequence textAfterCursor = inputConnection.getTextAfterCursor(n, 0);
         if(textAfterCursor.length() == n) {
@@ -320,7 +320,7 @@ public class KCommands {
     }
 
     //move back a word
-    void b(int n) {
+    public void b(int n) {
         for(int i=0;i<n;i++) {
             final String splitRegexp = " ";
 
@@ -338,7 +338,7 @@ public class KCommands {
     }
 
     //move forward a word
-    void w(int n) {
+    public void w(int n) {
         for(int i=0;i<n;i++) {
             final String splitRegexp = " ";
 
@@ -355,7 +355,7 @@ public class KCommands {
     }
 
     //move to start of line
-    void startOfLine(int n) {
+    public void startOfLine(int n) {
         for(int i=0;i<n;i++) {
             final String splitRegexp = "(?<=\\n)";
 
@@ -370,7 +370,7 @@ public class KCommands {
     }
 
     //move to end of line
-    void endOfLine(int n) {
+    public void endOfLine(int n) {
         for(int i=0;i<n;i++) {
             final String splitRegexp = "\\n";
 
@@ -382,7 +382,7 @@ public class KCommands {
     }
 
     //execute subcommand
-    void e(int n, String cmd) {
+    public void e(int n, String cmd) {
         //Remove leading !
         if(cmd.startsWith("!")) {
             cmd = cmd.substring(1);
