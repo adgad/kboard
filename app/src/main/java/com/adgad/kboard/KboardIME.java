@@ -19,11 +19,9 @@ import android.view.inputmethod.InputMethodManager;
 
 
 import com.google.gson.Gson;
-import com.vdurmont.emoji.EmojiManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 /**
@@ -177,6 +175,7 @@ public class KboardIME  extends InputMethodService
     public void onRelease(int primaryCode) {
         InputConnection ic = getCurrentInputConnection();
         KCommands commands = new KCommands(
+                this,
                 ic,
                 getCurrentInputEditorInfo(),
                 keys,

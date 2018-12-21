@@ -6,6 +6,12 @@ import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 
@@ -36,8 +42,10 @@ public class KCommands {
     private List<String> mTextKeys = new ArrayList<>();
     private Map<String,String> mCommandKeys = new HashMap<>();
     private String buffer = null;
+    private KboardIME mIme;
 
     public KCommands(
+            KboardIME ime,
             InputConnection ic,
             EditorInfo ei,
             List<String> keys,
@@ -48,6 +56,7 @@ public class KCommands {
         mAutoSpace = autoSpace;
         mPassiveAggressive = passiveAggressive;
         mKeys = keys;
+        mIme = ime;
         for (String key: mKeys) {
             if (!(key.startsWith("/") && key.contains("!"))) {
                 mTextKeys.add(key);
@@ -174,6 +183,21 @@ public class KCommands {
         inputConnection.performContextMenuAction(android.R.id.copy);
     }
 
+    //copy selected or all
+    public void ys(int n) {
+        CharSequence selected = inputConnection.getSelectedText(0);
+        if(selected == null || selected.length() == 0 ) {
+            int currentPosition = getCursorPosition();
+            inputConnection.performContextMenuAction(android.R.id.selectAll);
+            buffer = (inputConnection.getSelectedText(0).toString());
+            inputConnection.performContextMenuAction(android.R.id.copy);
+            inputConnection.setSelection(currentPosition, currentPosition);
+        } else {
+            buffer = (inputConnection.getSelectedText(0).toString());
+        }
+    }
+
+
     //select all
     public void sa(int n) {
         int currentPosition = getCursorPosition();
@@ -206,7 +230,9 @@ public class KCommands {
 
     //
     public void fancy(int n, String parameter) {
+        for(int i=0;i<n;i++) {
             inputConnection.commitText(ConvertUnicode.convert(buffer, parameter), 1);
+        }
     }
 
     //find and replace
@@ -379,6 +405,41 @@ public class KCommands {
             int position = getCursorPosition() + nextLineLength;
             inputConnection.setSelection(position, position);
         }
+    }
+
+    public void curl(int n, String parameter) {
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(mIme);
+        final int repeat = n;
+        String url = parameter;
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        i(repeat, response);
+                    }
+
+
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders(){
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("User-agent", "curl");
+                headers.put("Accept", "text/plain");
+                return headers;
+            }
+        };
+
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     //execute subcommand

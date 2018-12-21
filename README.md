@@ -97,6 +97,8 @@ _Warning_: weird unicode characters look cool but break accessibility software, 
 
 `/bdaysend!birthday,s` - Can also have commands that refer to other command keys you've made'
 
+`/uuid!curl(https://httpbin.org/uuid)` - Can make arbitrary GET requests to URLS
+
 ====
 
 ###Other use cases of kboard
