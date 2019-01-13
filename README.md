@@ -1,52 +1,37 @@
 # kboard
-Android keyboard for fast responses
+
+A programmable keyboard for Android that lets you send phrases, lenny faces, macros, or data from the Internet in a single tap!
 
 [View in Play Store](https://play.google.com/store/apps/details?id=com.adgad.kboard)
+[Demo](https://www.youtube.com/watch?v=h3i5U2tk364)
 
-====
+---
 
-###Description
-
-Do you hate people as much as I do?
-Do you find yourself wasting time trying to find the right condescending message in order to get rid of them?
-
-Then you need kboard - a keyboard designed specifically to end conversations. Don't waste time with all those other superfluous letters when all you really need is 'k.'.
-
-
-* Add as many custom keys as you want
-* Quickly switch between kboard and your other keyboards
-* One-click send option for the pinnacle of laziness
-* COMMANDS - a powerful, VIM-like syntax for custom key commands and macros (more below).
-
-Designed to save you hours of pointless talking!
-
-====
 
 ### Commands
 
-Commands is a powerful (I hope) VIM-like way of adding macro keys to the kboard for things like cursor movements, copying/pasting and text manipulation.
-
-I actually only wanted an easy way to make words bold/italic on Whatsapp.
-Now, with commands, I can add a key like this:
-
-`/Italicise!dw,i(_$0_)`
-
-Which will yank the previous word then output it wrapped in underscores. LIke magic.
+kboard includes a VIM-like syntax for adding special macro keys, to perform tasks like cursor movements, copy/pasting and text manipulation.
 
 A command key has the following format:
 
 `/<friendly label>!<comma separated commands>`
 
+Example:
+
+`/Italicise!dw,i(_$0_)`
+
+This creates a key titled "Italicise", which does the following: `dw` deletes the previous word and adds it to the buffer, `i` inserts the text in the brackets (which would be the deleted word wrapped in underscores.
+
 Most commands can be preceded by a number, indicating how many times it will be run.
 
-Some commands take parameters in parentheses. The full list of available commands are:
-
+**Available commands:**
 
 * `d` delete previous character
 * `dw` delete previous word
 * `3dw` delete previous three words
 * `dd` delete all
-* `dt(char)` - deletes (backwards) up to and including the specified character
+* `dt(char)` deletes (backwards) up to and including the specified character
+* `ds` - deletes either the selected text, or if nothing is selected then deletes everything.
 * `yy` copy all
 * `y` copy selection
 * `p` paste from buffer
@@ -66,6 +51,8 @@ Some commands take parameters in parentheses. The full list of available command
 * `rnd(word1;word2;...)` output a random word from the comma separated list
 * `rnde` output a random emoji
 * `fr(from;to)` replace all instances of `from` to `to`
+* `fancy(style)` outputs buffer text with funky unicode characters (circle, darkcircle,square,darksquare,double,monospace,fancy,fancybold)
+* `curl(URL)` requests data from a URL and outputs it.
 
 **Examples of use**
 
@@ -99,14 +86,24 @@ _Warning_: weird unicode characters look cool but break accessibility software, 
 
 `/uuid!curl(https://httpbin.org/uuid)` - Can make arbitrary GET requests to URLS
 
-====
+---
 
-###Other use cases of kboard
+## CURL examples
 
-* Add your favourite hashtags
-* Use to speed up github peer reviews (e.g. thumbs up, +1, LGTM)
-* Add long names that are awkward to type
-* Custom text emoji/faces (e.g. ¯\_(ツ)_/¯, ( ͡° ͜ʖ ͡°))
-* Automate sweet nothings to your partner
+The `curl` commands allows you to create your own HTTP endpoints to output anything you like!
+
+Here are some examples of how it can be used:
+
+`/yt!ds,curl(https://kboard-api.glitch.me/youtube/$0)`
+An endpoint that searches the Youtube API, and returns the URL for the first video found.
+
+`/wolfram!ds,curl(https://api.wolframalpha.com/v1/result?appid=<APP_ID>&i=$0)`
+Uses the [Wolfram Short Answers API](https://products.wolframalpha.com/short-answers-api/documentation/) to retrieve answers to anything [Wolfram Alpha](https://www.wolframalpha.com/) can answer.
+
+`/cat!curl(https://kboard-api.glitch.me/catfact)`
+Outputs a cat fact from a [Cat Fact API](https://alexwohlbruck.github.io/cat-facts/)
+
+`/dad joke!curl(https://icanhazdadjoke.com/api`
+Outputs a random lame joke.
 
 
