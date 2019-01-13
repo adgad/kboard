@@ -8,7 +8,7 @@ A programmable keyboard for Android that lets you send phrases, lenny faces, mac
 ---
 
 
-### Commands
+## Commands
 
 kboard includes a VIM-like syntax for adding special macro keys, to perform tasks like cursor movements, copy/pasting and text manipulation.
 
