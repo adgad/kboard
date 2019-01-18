@@ -104,7 +104,7 @@ Uses the [Wolfram Short Answers API](https://products.wolframalpha.com/short-ans
 `/cat!curl(https://kboard-api.glitch.me/catfact)`
 Outputs a cat fact from a [Cat Fact API](https://alexwohlbruck.github.io/cat-facts/)
 
-`/dad joke!curl(https://icanhazdadjoke.com/api`
+`/dad joke!curl(https://icanhazdadjoke.com/api)`
 Outputs a random lame joke.
 
 
