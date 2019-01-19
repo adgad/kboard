@@ -17,6 +17,7 @@ package com.adgad.kboard;
  */
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +29,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class RecyclerListAdapter extends RecyclerView.Adapter<ItemViewHolder> {
+class RecyclerListAdapter extends RecyclerView.Adapter<ItemViewHolder> {
 
     private final List<String> mItems = new ArrayList<>();
-    private ItemViewHolder.ItemClickListener mListener;
-    private SharedPreferences mPreferences;
+    private final ItemViewHolder.ItemClickListener mListener;
+    private final SharedPreferences mPreferences;
     private final Gson gson = new Gson();
 
     public RecyclerListAdapter(ArrayList items, SharedPreferences sharedPrefs, ItemViewHolder.ItemClickListener listener) {
@@ -41,14 +42,15 @@ public class RecyclerListAdapter extends RecyclerView.Adapter<ItemViewHolder> {
         mPreferences = sharedPrefs;
     }
 
+    @NonNull
     @Override
-    public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, parent, false);
         return new ItemViewHolder(view, mListener);
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         holder.textView.setText(mItems.get(position));
     }
 

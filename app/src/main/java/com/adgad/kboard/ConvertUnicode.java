@@ -1,18 +1,19 @@
 package com.adgad.kboard;
 
+import android.os.Build;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by arjun on 19/12/18.
  */
 class ConvertUnicode {
 
-    private static String normal = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
 
     static String convert(String src, String type) {
-        Map<String, String> conversions = new HashMap<String, String>();
+        Map<String, String> conversions = new HashMap<>();
         conversions.put("circle", "⓪①②③④⑤⑥⑦⑧⑨ⓐⓑⓒⓓⓔⓕⓖⓗⓘⓙⓚⓛⓜⓝⓞⓟⓠⓡⓢⓣⓤⓥⓦⓧⓨⓩⒶⒷⒸⒹⒺⒻⒼⒽⒾⒿⓀⓁⓂⓃⓄⓅⓆⓇⓈⓉⓊⓋⓌⓍⓎⓏ");
         conversions.put("darkcircle", "⓿❶❷❸❹❺❻❼❽❾🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩");
         conversions.put("monospace", "𝟶𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿𝚊𝚋𝚌𝚍𝚎𝚏𝚐𝚑𝚒𝚓𝚔𝚕𝚖𝚗𝚘𝚙𝚚𝚛𝚜𝚝𝚞𝚟𝚠𝚡𝚢𝚣𝙰𝙱𝙲𝙳𝙴𝙵𝙶𝙷𝙸𝙹𝙺𝙻𝙼𝙽𝙾𝙿𝚀𝚁𝚂𝚃𝚄𝚅𝚆𝚇𝚈𝚉");
@@ -25,19 +26,24 @@ class ConvertUnicode {
         if(!conversions.containsKey(type)) {
             return src;
         }
-        int[] convert = conversions.get(type).codePoints().toArray();
-        int[] normalCodePoints = normal.codePoints().toArray();
-        System.out.println(normalCodePoints);
-        StringBuilder destination = new StringBuilder();
-        for(int c : src.toCharArray()) {
-            int match = normal.indexOf(c);
-            if(match >= 0) {
-                destination.appendCodePoint(convert[match]);
-            } else {
-                destination.appendCodePoint(c);
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+
+            int[] convert = Objects.requireNonNull(conversions.get(type)).codePoints().toArray();
+            String normal = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            StringBuilder destination = new StringBuilder();
+            for (int c : src.toCharArray()) {
+                int match = normal.indexOf(c);
+                if (match >= 0) {
+                    destination.appendCodePoint(convert[match]);
+                } else {
+                    destination.appendCodePoint(c);
+                }
             }
+            return destination.toString();
+        } else {
+            return src;
         }
-        return destination.toString();
     }
 }
 

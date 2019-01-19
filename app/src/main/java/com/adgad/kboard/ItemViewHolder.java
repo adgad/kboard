@@ -8,7 +8,7 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     public final TextView textView;
 
-    public ItemClickListener mListener;
+    private ItemClickListener mListener;
 
     public ItemViewHolder(View itemView, ItemClickListener clickListener) {
         super(itemView);
@@ -20,15 +20,11 @@ public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        mListener.onItemClick(v, this.getAdapterPosition());
-    }
-
-    public void setOnItemClickListener(ItemClickListener listener) {
-        mListener = listener;
+        mListener.onItemClick(this.getAdapterPosition());
     }
 
 
-    public static interface ItemClickListener {
-        public void onItemClick(View caller, int position);
+    public interface ItemClickListener {
+        void onItemClick(int position);
     }
 }

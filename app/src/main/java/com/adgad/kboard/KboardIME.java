@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -74,7 +75,7 @@ public class KboardIME  extends InputMethodService
         mVibrateOnClick = sharedPref.getBoolean("vibrate_on", false);
         mSoundOnClick = sharedPref.getBoolean("sound_on", false);
         mPassiveAggressive = sharedPref.getBoolean("passive_aggressive", false);
-        mRows = Integer.parseInt(sharedPref.getString("rows", "5"));
+        mRows = Integer.parseInt(Objects.requireNonNull(sharedPref.getString("rows", "5")));
         mKeysPerScreen = mRows * KEYS_PER_ROW;
         setKeys();
 
@@ -84,7 +85,7 @@ public class KboardIME  extends InputMethodService
     private void setKeys() {
         Gson gson = new Gson();
 
-        String defaultJson = gson.toJson((Object) Keys.getDefault());
+        String defaultJson = gson.toJson(Keys.getDefault());
         String keysAsString = sharedPref.getString(Keys.STORAGE_KEY, defaultJson);
         keys = gson.fromJson(keysAsString, ArrayList.class);
         totalScreens = (int)Math.ceil((double)keys.size() / (mRows * KEYS_PER_ROW));
@@ -144,7 +145,7 @@ public class KboardIME  extends InputMethodService
     }
 
 
-    public void resetKeyChars() {
+    private void resetKeyChars() {
         String newString;
         for(Keyboard.Key key:mKeys) {
             newString = getKeyString(key.codes[0]);
@@ -221,13 +222,13 @@ public class KboardIME  extends InputMethodService
             }
     }
 
-    public void parseCommand(KCommands kc, String cmd) {
+    private void parseCommand(KCommands kc, String cmd) {
         String[] cmdSplit = cmd.split("!", 2);
         String cmdAction = cmdSplit[1];
         kc.e(1, cmdAction);
     }
 
-    public void sendReply(KCommands commands, String key) {
+    private void sendReply(KCommands commands, String key) {
         if(key == "NO_VALUE") {
             return;
         }
@@ -237,13 +238,12 @@ public class KboardIME  extends InputMethodService
         }
     }
 
-    public void switchIME() {
+    private void switchIME() {
         //final String LATIN = "com.android.inputmethod.latin/.LatinIME";
 // 'this' is an InputMethodService
-        if (Build.VERSION.SDK_INT >= 16) {
             try {
                 InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-                final IBinder token = this.getWindow().getWindow().getAttributes().token;
+                final IBinder token = Objects.requireNonNull(this.getWindow().getWindow()).getAttributes().token;
                 //imm.setInputMethod(token, LATIN);
                 imm.switchToNextInputMethod(token, false);
             } catch (Throwable t) { // java.lang.NoSuchMethodError if API_level<11
@@ -251,9 +251,7 @@ public class KboardIME  extends InputMethodService
                 Log.e(TAG, "cannot set the previous input method:");
                 t.printStackTrace();
             }
-        } else {
-            mInputMethodManager.showInputMethodPicker();
-        }
+
 
     }
     @Override
@@ -316,15 +314,18 @@ public class KboardIME  extends InputMethodService
             defaultKeys.add("/exec!dt(!),e($0)");
             defaultKeys.add("\uD83D\uDE12");
 
-            defaultKeys.add("/🅰🅱🅲!ds,fancy(darksquare)");
-            defaultKeys.add("/🄰🄱🄲!ds,fancy(square)");
-            defaultKeys.add("/🅐🅑🅒!ds,fancy(darkcircle)");
-            defaultKeys.add("/ⓐⓑⓒ!ds,fancy(circle)");
-            defaultKeys.add("/𝚊𝚋𝚌!ds,fancy(monospace)");
-            defaultKeys.add("/𝕒𝕓𝕔!ds,fancy(double)");
-            defaultKeys.add("/𝔞𝔟𝔠!ds,fancy(fancy)");
-            defaultKeys.add("/𝖆𝖇𝖈!ds,fancy(fancybold)");
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                defaultKeys.add("/🅰🅱🅲!ds,fancy(darksquare)");
+                defaultKeys.add("/🄰🄱🄲!ds,fancy(square)");
+                defaultKeys.add("/🅐🅑🅒!ds,fancy(darkcircle)");
+                defaultKeys.add("/ⓐⓑⓒ!ds,fancy(circle)");
+                defaultKeys.add("/𝚊𝚋𝚌!ds,fancy(monospace)");
+                defaultKeys.add("/𝕒𝕓𝕔!ds,fancy(double)");
+                defaultKeys.add("/𝔞𝔟𝔠!ds,fancy(fancy)");
+                defaultKeys.add("/𝖆𝖇𝖈!ds,fancy(fancybold)");
+            }
 
+            defaultKeys.add("/catfact!curl(https://kboard-api.glitch.me/catfact");
             defaultKeys.add("ಥ_ಥ");
             defaultKeys.add("thank you");
             defaultKeys.add("sorry");

@@ -2,10 +2,10 @@ package com.adgad.kboard;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.app.ListActivity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,8 +14,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +24,6 @@ import java.util.ArrayList;
 public class CustomKeysActivity extends Activity implements AddWordDialogFragment.AddWordDialogListener {
 
 
-    private SharedPreferences sharedPref;
     private final Gson gson = new Gson();
     private RecyclerListAdapter adapter;
 
@@ -44,7 +41,7 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.list_view);
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String defaultJson = gson.toJson(KboardIME.Keys.getDefault());
         String keysAsString = sharedPref.getString(KboardIME.Keys.STORAGE_KEY, defaultJson);
         ArrayList<String> keys = gson.fromJson(keysAsString, ArrayList.class);
@@ -55,22 +52,22 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
 
         adapter = new RecyclerListAdapter(keys, sharedPref, new ItemViewHolder.ItemClickListener() {
             @Override
-            public void onItemClick(View caller, int position) {
+            public void onItemClick(int position) {
                 showAddDialog(position, adapter.get(position));
             }
         });
 
         ItemTouchHelper mIth = new ItemTouchHelper(
                 new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT) {
-                    public boolean onMove(RecyclerView recyclerView,
-                                          RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    public boolean onMove(@NonNull RecyclerView recyclerView,
+                                          @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                         final int fromPos = viewHolder.getAdapterPosition();
                         final int toPos = target.getAdapterPosition();
 
                         adapter.swap(fromPos, toPos);
                         return true;// true if moved, false otherwise
                     }
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                         final int fromPos = viewHolder.getAdapterPosition();
                         adapter.remove(fromPos);
                     }
@@ -123,7 +120,7 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
     }
 
     @Override
-    public void onDialogNeutralClick(DialogFragment dialog, int index) {
+    public void onDialogNeutralClick(int index) {
         if(index > 0) {
             adapter.swap(index, index-1);
         }

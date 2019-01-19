@@ -7,8 +7,9 @@
     android:layout_gravity="center_vertical"
     android:gravity="center_vertical"
     android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     android:textAppearance="?android:attr/textAppearanceMedium"
     android:clickable="true"
     android:focusable="true"
     android:background="?attr/selectableItemBackground"
-    />
+    android:paddingStart="16dp" />

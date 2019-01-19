@@ -19,14 +19,14 @@ public class AddWordDialogFragment extends DialogFragment {
     public interface AddWordDialogListener {
         void onDialogPositiveClick(DialogFragment dialog, int index);
         void onDialogNegativeClick(DialogFragment dialog, int index);
-        void onDialogNeutralClick(DialogFragment dialog, int index);
+        void onDialogNeutralClick(int index);
 
 
     }
 
 
     // Use this instance of the interface to deliver action events
-    AddWordDialogListener mListener;
+    private AddWordDialogListener mListener;
 
     //Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
     @Override
@@ -63,7 +63,7 @@ public class AddWordDialogFragment extends DialogFragment {
                 .setNeutralButton("Move up", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
-                        mListener.onDialogNeutralClick(AddWordDialogFragment.this, index);
+                        mListener.onDialogNeutralClick(index);
                     }
                 })
                 .setPositiveButton(index > -1 ? "OK" : "Add", new DialogInterface.OnClickListener() {

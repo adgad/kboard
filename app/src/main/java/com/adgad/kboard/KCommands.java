@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -29,20 +30,20 @@ import java.util.Random;
  */
 
 
+@SuppressWarnings("ALL")
 public class KCommands {
 
     private static final int MAX_LOOKBACK = 500;
 
-    private InputConnection inputConnection;
-    private EditorInfo inputEditor;
-    private boolean mAutoSpace;
-    private boolean mPassiveAggressive;
-    private List<String> mKeys;
-    private Collection<Emoji> mEmoji;
-    private List<String> mTextKeys = new ArrayList<>();
-    private Map<String,String> mCommandKeys = new HashMap<>();
+    private final InputConnection inputConnection;
+    private final EditorInfo inputEditor;
+    private final boolean mAutoSpace;
+    private final boolean mPassiveAggressive;
+    private final Collection<Emoji> mEmoji;
+    private final List<String> mTextKeys = new ArrayList<>();
+    private final Map<String,String> mCommandKeys = new HashMap<>();
     private String buffer = null;
-    private KboardIME mIme;
+    private final KboardIME mIme;
 
     public KCommands(
             KboardIME ime,
@@ -55,7 +56,7 @@ public class KCommands {
         inputEditor = ei;
         mAutoSpace = autoSpace;
         mPassiveAggressive = passiveAggressive;
-        mKeys = keys;
+        List<String> mKeys = keys;
         mIme = ime;
         for (String key: mKeys) {
             if (!(key.startsWith("/") && key.contains("!"))) {
@@ -81,7 +82,7 @@ public class KCommands {
                 key = key + ".";
             }
         }
-        inputConnection.commitText(word + key, 1);
+        Objects.requireNonNull(inputConnection).commitText(word + key, 1);
     }
 
     private int getCursorPosition() {
@@ -99,7 +100,11 @@ public class KCommands {
 
         if(selected == null || selected.length() == 0 ) {
             buffer = (inputConnection.getTextBeforeCursor(n, 0).toString());
-            inputConnection.deleteSurroundingTextInCodePoints(n, 0);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                inputConnection.deleteSurroundingTextInCodePoints(n, 0);
+            } else {
+                inputConnection.deleteSurroundingText(n,0);
+            }
         } else {
             buffer = selected.toString();
             inputConnection.commitText("", 1);
@@ -108,46 +113,46 @@ public class KCommands {
 
     //delete previous word
     public void dw(int n) {
-        String buf = "";
+        StringBuilder buf = new StringBuilder();
         for(int i =0; i<n;i++) {
             final int charactersToGet = 30;
             final String splitRegexp = " ";
 
             // delete trailing spaces
             while (inputConnection.getTextBeforeCursor(1, 0).toString().equals(splitRegexp)) {
-                buf += inputConnection.getTextBeforeCursor(1, 0).toString();
+                buf.append(inputConnection.getTextBeforeCursor(1, 0).toString());
                 inputConnection.deleteSurroundingText(1, 0);
             }
 
             // delete last word letters
             String[] words = inputConnection.getTextBeforeCursor(charactersToGet, 0).toString().split(splitRegexp);
             String lastWord = words[words.length - 1];
-            buf += lastWord;
+            buf.append(lastWord);
             inputConnection.deleteSurroundingText(lastWord.length(), 0);
         }
-       buffer = (buf);
+       buffer = (buf.toString());
     }
 
     //delete to a character
     public void dt(int n, String parameter) {
-        String buf = "";
+        StringBuilder buf = new StringBuilder();
         for(int i =0; i<n;i++) {
             final int charactersToGet = 50;
             final String splitRegexp = parameter.replace("\\", "\\\\");
 
             // delete trailing spaces
             while (inputConnection.getTextBeforeCursor(1, 0).toString().equals(splitRegexp)) {
-                buf += inputConnection.getTextBeforeCursor(1, 0).toString();
+                buf.append(inputConnection.getTextBeforeCursor(1, 0).toString());
                 inputConnection.deleteSurroundingText(1, 0);
             }
 
             // delete last word letters
             String[] words = inputConnection.getTextBeforeCursor(charactersToGet, 0).toString().split(splitRegexp);
             String lastWord = words[words.length - 1];
-            buf += (parameter + lastWord);
+            buf.append(parameter).append(lastWord);
             inputConnection.deleteSurroundingText(lastWord.length() + parameter.length(), 0);
         }
-        buffer = (buf);
+        buffer = (buf.toString());
     }
 
     //delete everything
@@ -303,9 +308,9 @@ public class KCommands {
 
     //random from list or all kboard keys
     public void rnd(int n, String parameter) {
-        List<String> textKeys = new ArrayList<>();
+        List<String> textKeys;
         if(parameter!= null && parameter.length() > 0) {
-            textKeys.addAll(Arrays.asList(parameter.split(";", 100)));
+            textKeys = new ArrayList<>(Arrays.asList(parameter.split(";", 100)));
         } else {
             textKeys = mTextKeys;
         }
@@ -411,10 +416,9 @@ public class KCommands {
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(mIme);
         final int repeat = n;
-        String url = parameter;
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, parameter,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -431,7 +435,7 @@ public class KCommands {
         }) {
             @Override
             public Map<String, String> getHeaders(){
-                Map<String, String> headers = new HashMap<String, String>();
+                Map<String, String> headers = new HashMap<>();
                 headers.put("User-agent", "curl");
                 headers.put("Accept", "text/plain");
                 return headers;
@@ -489,7 +493,7 @@ public class KCommands {
 
     }
 
-    private boolean execute(String cmd, int n, String parameter) {
+    private void execute(String cmd, int n, String parameter) {
         inputConnection.beginBatchEdit();
 
         if(cmd.equals("^")) {
@@ -505,7 +509,7 @@ public class KCommands {
                 getClass().getMethod(cmd, int.class).invoke(this, n);
 
             }
-            return true;
+            return;
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -517,7 +521,6 @@ public class KCommands {
             e.printStackTrace();
         }
         inputConnection.endBatchEdit();
-        return false;
     }
 
 }

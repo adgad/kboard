@@ -9,15 +9,11 @@ import android.view.inputmethod.EditorInfo;
 /**
  * Created by arjun on 14/03/15.
  */
-public class KBoard extends Keyboard {
+class KBoard extends Keyboard {
     private Key mEnterKey;
 
     public KBoard(Context context, int xmlLayoutResId) {
         super(context, xmlLayoutResId);
-    }
-
-    public KBoard(Context context, int layoutTemplateResId, CharSequence characters, int columns, int horizontalPadding) {
-        super(context, layoutTemplateResId, characters, columns, horizontalPadding);
     }
 
 

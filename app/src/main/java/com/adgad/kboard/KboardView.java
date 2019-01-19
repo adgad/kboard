@@ -12,15 +12,10 @@ import android.inputmethodservice.KeyboardView;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
-import android.widget.PopupWindow;
 
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by arjun on 12/06/16.
@@ -28,11 +23,12 @@ import java.util.List;
 public class KboardView extends KeyboardView {
 
 
-    private SharedPreferences sharedPref;
+    private final SharedPreferences sharedPref;
     private Canvas mCanvas;
-    private Paint mPaint = new Paint();
-    private Paint mBackground = new Paint();
-    private Paint mKey = new Paint();
+    private final Paint mPaint = new Paint();
+    private final Paint mBackground = new Paint();
+    private final Paint mKey = new Paint();
+    float[] hsv = new float[3];
 
 
     public KboardView(Context context, AttributeSet attrs) {
@@ -43,24 +39,23 @@ public class KboardView extends KeyboardView {
     }
 
 
-    private String ellipsize(String input, int maxLength) {
+    private String ellipsize(String input) {
         String ellip = "...";
-        if (input == null || input.length() <= maxLength
+        if (input == null || input.length() <= 14
                 || input.length() < ellip.length()) {
             return input;
         }
-        return input.substring(0, maxLength - ellip.length()).concat(ellip);
+        return input.substring(0, 14 - ellip.length()).concat(ellip);
     }
 
-    public boolean isLuckyKey(Keyboard.Key key) {
+    private boolean isLuckyKey(Keyboard.Key key) {
         return key.codes[0] == -99;
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        mCanvas = canvas;
-        int height = mCanvas.getHeight();
-        int width = mCanvas.getWidth();
+        int height = getHeight();
+        int width = getWidth();
         mPaint.setTextAlign(Paint.Align.CENTER);
         mPaint.setTextSize(36);
         mPaint.setAntiAlias(true);
@@ -69,13 +64,12 @@ public class KboardView extends KeyboardView {
         int borderColor = sharedPref.getInt("bgcolor", R.color.md_teal200);
         int pressedColor = sharedPref.getInt("pressedcolor", R.color.md_teal500);
         int textColor = sharedPref.getInt("textcolor", R.color.material_black);
-        int textSize = Integer.parseInt(sharedPref.getString("fontsize", "36"));
+        int textSize = Integer.parseInt(Objects.requireNonNull(sharedPref.getString("fontsize", "36")));
         boolean spacing = sharedPref.getBoolean("spacing", false);
         int radius = 5;
         boolean isBold = sharedPref.getBoolean("textBold", true);
 
         //darken the border color
-        float[] hsv = new float[3];
         Color.colorToHSV(borderColor, hsv);
         hsv[2] *= 0.85f; // value component
         borderColor = Color.HSVToColor(hsv);
@@ -91,7 +85,7 @@ public class KboardView extends KeyboardView {
 
 
 
-            if((key.pressed == true && !isLuckyKey(key)) || (isLuckyKey(key) && !key.pressed)) {
+            if((key.pressed && !isLuckyKey(key)) || (isLuckyKey(key) && !key.pressed)) {
                 mKey.setColor(pressedColor);
             } else {
                 mKey.setColor(bgColor);
@@ -116,7 +110,7 @@ public class KboardView extends KeyboardView {
                 key.icon.draw(canvas);
             } else if(key.label != null) {
                 String label = key.popupCharacters != null ? key.popupCharacters.toString() : key.label.toString();
-                boolean isCommandKey = label != null && label.length() > 2 && label.charAt(0) == '/' && label.indexOf("!") > 0;
+                boolean isCommandKey = label.length() > 2 && label.charAt(0) == '/' && label.indexOf("!") > 0;
                 if(key.codes[0] == 10) {
                     mPaint.setTextSize(textSize + 32); //enter icon is small so make it bigger
                 } else {
@@ -130,7 +124,7 @@ public class KboardView extends KeyboardView {
                     mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, isBold ? Typeface.BOLD : Typeface.NORMAL));
                     mPaint.setUnderlineText(false);
                 }
-                canvas.drawText(ellipsize(label, 14), key.x + ((key.width - marginRight) / 2) + marginLeft, key.y + ((key.height - marginBottom) / 2) + marginTop, mPaint);
+                canvas.drawText(ellipsize(label), key.x + ((key.width - marginRight) / 2) + marginLeft, key.y + ((key.height - marginBottom) / 2) + marginTop, mPaint);
             }
         }
     }

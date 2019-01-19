@@ -7,10 +7,10 @@ import android.app.backup.SharedPreferencesBackupHelper;
 public class MyBackupAgent extends BackupAgentHelper {
 
     // The name of the SharedPreferences file
-    static final String PREFS = "com.adgad.kboard_preferences";
+    private static final String PREFS = "com.adgad.kboard_preferences";
 
     // A key to uniquely identify the set of backup data
-    static final String PREFS_BACKUP_KEY = "mybackup";
+    private static final String PREFS_BACKUP_KEY = "mybackup";
 
     @Override
     public void onCreate() {
