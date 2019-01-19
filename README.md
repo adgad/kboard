@@ -99,12 +99,12 @@ Here are some examples of how it can be used:
 An endpoint that searches the Youtube API, and returns the URL for the first video found.
 
 `/wolfram!ds,curl(https://api.wolframalpha.com/v1/result?appid=<APP_ID>&i=$0)`
-Uses the [Wolfram Short Answers API](https://products.wolframalpha.com/short-answers-api/documentation/) to retrieve answers to anything [Wolfram Alpha](https://www.wolframalpha.com/) can answer.
+Uses the [Wolfram Short Answers API](https://products.wolframalpha.com/short-answers-api/documentation/) to retrieve answers to anything [Wolfram Alpha](https://www.wolframalpha.com/) can answer. (Requires API key)
 
 `/cat!curl(https://kboard-api.glitch.me/catfact)`
 Outputs a cat fact from a [Cat Fact API](https://alexwohlbruck.github.io/cat-facts/)
 
-`/dad joke!curl(https://icanhazdadjoke.com/api)`
+`/dad joke!curl(https://icanhazdadjoke.com/)`
 Outputs a random lame joke.
 
 
