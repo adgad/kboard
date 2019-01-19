@@ -1,0 +1,6 @@
+* NEW Added `curl` - create a key that outputs the result of a GET request
+* NEW keys to 𝕥𝕣𝕒𝕟𝕤𝕗𝕠𝕣𝕞 🅣🅔🅧🅣 𝚒𝚗𝚝𝚘 🄵🄰🄽🄲🅈 𝔲𝔫𝔦𝔠𝔬𝔡𝔢
+* Added `ds` - delete selected or everything
+* Refactored key selection view
+* Drop support for < Nougat (Sorry!)
+* Maybe fixed or broke more things who knows

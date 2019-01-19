@@ -1,0 +1,4 @@
+* NEW Added `curl` - create a key that outputs the result of a HTTP GET request
+- examples: Wolfram Short Answers API, Cat Facts, Jokes API, Song name => Youtube Video. The world is your oyster!
+* Bring back support for some older devices (KitKat+)
+* Performance enhancements + bug fixes

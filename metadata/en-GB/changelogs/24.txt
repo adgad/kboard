@@ -1,0 +1,2 @@
+* Fix rnd command not doing anything
+* Add Select All command (sa)
