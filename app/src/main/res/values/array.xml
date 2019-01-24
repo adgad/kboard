@@ -692,10 +692,8 @@
     </array>
 
     <string-array name="rows">
+        <item>"1"</item>
         <item>"3"</item>
-        <item>"4"</item>
-        <item>"5"</item>
-        <item>"6"</item>
         <item>"7"</item>
         <item>"8"</item>
     </string-array>

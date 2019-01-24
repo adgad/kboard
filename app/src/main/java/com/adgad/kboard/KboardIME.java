@@ -106,6 +106,8 @@ public class KboardIME  extends InputMethodService
             keyboard = new KBoard(this, R.xml.five_rows);
         } else if (mRows == 4) {
             keyboard = new KBoard(this, R.xml.four_rows);
+        } else if (mRows == 1) {
+            keyboard = new KBoard(this, R.xml.one_row);
         } else {
             keyboard = new KBoard(this, R.xml.normal);
         }
