@@ -100,11 +100,7 @@ public class KCommands {
 
         if(selected == null || selected.length() == 0 ) {
             buffer = (inputConnection.getTextBeforeCursor(n, 0).toString());
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                inputConnection.deleteSurroundingTextInCodePoints(n, 0);
-            } else {
-                inputConnection.deleteSurroundingText(n,0);
-            }
+            inputConnection.deleteSurroundingText(n,0);
         } else {
             buffer = selected.toString();
             inputConnection.commitText("", 1);
