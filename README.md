@@ -6,6 +6,8 @@ A programmable keyboard for Android that lets you send phrases, lenny faces, mac
 
 [Demo](https://www.youtube.com/watch?v=h3i5U2tk364)
 
+<img src="https://user-images.githubusercontent.com/1978880/51786974-b85b9780-2163-11e9-85f2-d3e64a29e0d4.jpg" alt="screenshot of kboard in action" width="400">
+
 ---
 
 
