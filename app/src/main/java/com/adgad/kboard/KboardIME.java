@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 
 /**
@@ -50,7 +51,7 @@ public class KboardIME  extends InputMethodService
     private int totalScreens = 0;
     private int mRows = 5;
     private int mKeysPerScreen = 12;
-    private final int KEYS_PER_ROW = 4;
+    private int mKeysPerRow = 4;
 
 
 
@@ -76,9 +77,9 @@ public class KboardIME  extends InputMethodService
         mSoundOnClick = sharedPref.getBoolean("sound_on", false);
         mPassiveAggressive = sharedPref.getBoolean("passive_aggressive", false);
         mRows = Integer.parseInt(Objects.requireNonNull(sharedPref.getString("rows", "5")));
-        mKeysPerScreen = mRows * KEYS_PER_ROW;
+        mKeysPerRow = (mRows == 1) ? 1 : 4;
+        mKeysPerScreen = mRows * mKeysPerRow;
         setKeys();
-
     }
 
 
@@ -88,7 +89,7 @@ public class KboardIME  extends InputMethodService
         String defaultJson = gson.toJson(Keys.getDefault());
         String keysAsString = sharedPref.getString(Keys.STORAGE_KEY, defaultJson);
         keys = gson.fromJson(keysAsString, ArrayList.class);
-        totalScreens = (int)Math.ceil((double)keys.size() / (mRows * KEYS_PER_ROW));
+        totalScreens = (int)Math.ceil((double)keys.size() / (mRows * mKeysPerRow));
 
     }
     @Override public void onInitializeInterface() {

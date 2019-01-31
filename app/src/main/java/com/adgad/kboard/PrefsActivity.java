@@ -53,7 +53,7 @@ public class PrefsActivity extends PreferenceActivity {
                 toast.show();
                 return true;
             case R.id.macro_help:
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/adgad/kboard/blob/master/README.md"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/adgad/kboard/wiki"));
                 startActivity(browserIntent);
                 return true;
             default:

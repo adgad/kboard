@@ -1,5 +1,5 @@
 /build
-.idea
+.idea/
 /app/release
 /app/build
 .gradle/

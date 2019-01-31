@@ -418,7 +418,6 @@ public class KCommands {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
                         i(repeat, response);
                     }
 

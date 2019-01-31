@@ -7,8 +7,8 @@
     android:verticalGap="0px"
     android:keyHeight="40dp"
     >
-    <Row android:keyHeight="60dp">
-        <Key android:codes="-101" android:keyLabel="ಠ_ಠ" android:keyWidth="100%p"/>
+    <Row android:keyHeight="80dp">
+        <Key android:codes="-101" android:keyLabel="ಠ_ಠ" android:keyWidth="100%p" android:keyHeight="80dp"/>
     </Row>
     <Row android:keyHeight="45dp"
         >
