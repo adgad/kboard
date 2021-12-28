@@ -1,10 +1,12 @@
 package com.adgad.kboard;
 
+import android.content.ClipDescription;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
@@ -26,6 +28,7 @@ import com.android.volley.toolbox.Volley;
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -456,6 +459,13 @@ public class KCommands {
         }
     }
 
+    public Uri getImageUri (Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(mIme.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
     public void img(int n, String parameter) {
         // fetch the image
         Log.i("KBOARD", "about to fetch image");
@@ -467,7 +477,17 @@ public class KCommands {
         queue.add(imageRequest);
         try {
             Bitmap response = future.get(30, TimeUnit.SECONDS);
-            i(1, "Got image");
+            Uri uri = getImageUri(response);
+            InputContentInfo inputContentInfo = new InputContentInfo(
+                    uri,
+
+                    new ClipDescription("", new String[]{"image/png"})
+            );
+            int flags = 0;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+                flags |= inputConnection.INPUT_CONTENT_GRANT_READ_URI_PERMISSION;
+            }
+            inputConnection.commitContent(inputContentInfo, flags, null);
         } catch (InterruptedException e) {
             i(1, "InterruptedException");
             e.printStackTrace();
@@ -490,16 +510,7 @@ public class KCommands {
     /*
         Uri contentUri = new Uri();
 
-            InputContentInfo inputContentInfo = new InputContentInfo(
-                    contentUri,
 
-                    null
-            );
-            int flags = 0;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-                flags |= inputConnection.INPUT_CONTENT_GRANT_READ_URI_PERMISSION;
-            }
-            inputConnection.commitContent(inputContentInfo, flags, null);
         }
 
      */
