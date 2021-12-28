@@ -57,6 +57,7 @@ Most commands can be preceded by a number, indicating how many times it will be 
 * `fancy(style)` outputs buffer text with funky unicode characters (circle, darkcircle,square,darksquare,double,monospace,fancy,fancybold)
 * `curl(URL)` requests data from a URL and outputs it.
 * `img(URL)` requests an image from a URL and enters it in compatible messaging apps (e.g. Whatsapp)
+* `utf(unicode characters)` outputs the text unescaping all unicode character codes (e.g. `\u00A2`)
 
 **Examples of use**
 

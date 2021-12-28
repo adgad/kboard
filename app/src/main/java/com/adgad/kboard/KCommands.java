@@ -2,12 +2,9 @@ package com.adgad.kboard;
 
 import android.content.ClipDescription;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedText;
@@ -15,18 +12,16 @@ import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputContentInfo;
 
-import androidx.core.view.inputmethod.InputContentInfoCompat;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
+
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -490,6 +485,12 @@ public class KCommands {
             e.printStackTrace();
         } catch (TimeoutException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void utf(int n, String parameter) {
+        for(int i=0;i<n;i++) {
+            inputConnection.commitText(StringEscapeUtils.unescapeJava(parameter), 1);
         }
     }
 
