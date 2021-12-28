@@ -261,7 +261,10 @@ public class KCommands {
 
     //send
     public void s(int n) {
-        if((inputEditor.imeOptions & EditorInfo.IME_MASK_ACTION) == EditorInfo.IME_ACTION_SEND) {
+        if((inputEditor.imeOptions & EditorInfo.IME_MASK_ACTION) == EditorInfo.IME_ACTION_SEND ) {
+            inputConnection.performEditorAction(EditorInfo.IME_ACTION_SEND);
+        // Whatsapp seems to now have IME_ACTION_DONE, but sending still works so do that instead
+        } else if((inputEditor.imeOptions & EditorInfo.IME_MASK_ACTION) == EditorInfo.IME_ACTION_DONE ) {
             inputConnection.performEditorAction(EditorInfo.IME_ACTION_SEND);
         }
     }
