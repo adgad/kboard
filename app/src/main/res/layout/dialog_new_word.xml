@@ -6,7 +6,7 @@
 
     <EditText
         android:id="@+id/word"
-        android:inputType="text"
+        android:inputType="textNoSuggestions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -14,5 +14,6 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
         android:hint="Text"
-        android:importantForAutofill="no" />
+        android:importantForAutofill="no"
+        />
 </LinearLayout>
