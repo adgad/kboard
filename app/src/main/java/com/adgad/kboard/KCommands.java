@@ -467,12 +467,8 @@ public class KCommands {
     }
 
     public void img(int n, String parameter) {
-        // fetch the image
-        Log.i("KBOARD", "about to fetch image");
-
         RequestQueue queue = Volley.newRequestQueue(mIme);
         RequestFuture<Bitmap> future = RequestFuture.newFuture();
-        // Request a string response from the provided URL.
         ImageRequest imageRequest = new ImageRequest(parameter, future, 0,0,null,null, future);
         queue.add(imageRequest);
         try {
@@ -489,32 +485,12 @@ public class KCommands {
             }
             inputConnection.commitContent(inputContentInfo, flags, null);
         } catch (InterruptedException e) {
-            i(1, "InterruptedException");
             e.printStackTrace();
         } catch (ExecutionException e) {
-            i(1, "ExecutionException");
-
             e.printStackTrace();
         } catch (TimeoutException e) {
             e.printStackTrace();
-            i(1, "TimeoutException");
         }
-        // save it?
-        //send it?
-        /*
-        When the user selects an image, the IME calls commitContent() and sends an InputContentInfo to the editor.
-        The commitContent() call is analogous to the commitText() call, but for rich content.
-        InputContentInfo contains an URI that identifies the content in a content provider.
-        Your app can then request permission and read the content from the URI.
-         */
-    /*
-        Uri contentUri = new Uri();
-
-
-        }
-
-     */
-
     }
 
     //execute subcommand
