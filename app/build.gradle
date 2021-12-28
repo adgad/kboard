@@ -7,8 +7,8 @@ android {
         applicationId "com.adgad.kboard"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 33
-        versionName "4.1.4"
+        versionCode 40
+        versionName "5.0.0"
     }
     buildTypes {
         release {

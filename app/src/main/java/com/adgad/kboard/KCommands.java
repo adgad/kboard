@@ -1,15 +1,26 @@
 package com.adgad.kboard;
 
+import android.graphics.Bitmap;
+import android.media.Image;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputContentInfo;
+
+import androidx.core.view.inputmethod.InputContentInfoCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.vdurmont.emoji.Emoji;
@@ -24,6 +35,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by arjun on 27/12/16.
@@ -411,23 +426,13 @@ public class KCommands {
     public void curl(int n, String parameter) {
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(mIme);
+        RequestFuture<String> future = RequestFuture.newFuture();
+
         final int repeat = n;
 
+
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, parameter,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        i(repeat, response);
-                    }
-
-
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }) {
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, parameter, future, future){
             @Override
             public Map<String, String> getHeaders(){
                 Map<String, String> headers = new HashMap<>();
@@ -437,54 +442,121 @@ public class KCommands {
             }
         };
 
-// Add the request to the RequestQueue.
         queue.add(stringRequest);
+
+        try {
+            String response = future.get(10, TimeUnit.SECONDS);
+            i(repeat, response);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void img(int n, String parameter) {
+        // fetch the image
+        Log.i("KBOARD", "about to fetch image");
+
+        RequestQueue queue = Volley.newRequestQueue(mIme);
+        RequestFuture<Bitmap> future = RequestFuture.newFuture();
+        // Request a string response from the provided URL.
+        ImageRequest imageRequest = new ImageRequest(parameter, future, 0,0,null,null, future);
+        queue.add(imageRequest);
+        try {
+            Bitmap response = future.get(30, TimeUnit.SECONDS);
+            i(1, "Got image");
+        } catch (InterruptedException e) {
+            i(1, "InterruptedException");
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            i(1, "ExecutionException");
+
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+            i(1, "TimeoutException");
+        }
+        // save it?
+        //send it?
+        /*
+        When the user selects an image, the IME calls commitContent() and sends an InputContentInfo to the editor.
+        The commitContent() call is analogous to the commitText() call, but for rich content.
+        InputContentInfo contains an URI that identifies the content in a content provider.
+        Your app can then request permission and read the content from the URI.
+         */
+    /*
+        Uri contentUri = new Uri();
+
+            InputContentInfo inputContentInfo = new InputContentInfo(
+                    contentUri,
+
+                    null
+            );
+            int flags = 0;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+                flags |= inputConnection.INPUT_CONTENT_GRANT_READ_URI_PERMISSION;
+            }
+            inputConnection.commitContent(inputContentInfo, flags, null);
+        }
+
+     */
+
     }
 
     //execute subcommand
-    public void e(int n, String cmd) {
-        //Remove leading !
-        if(cmd.startsWith("!")) {
-            cmd = cmd.substring(1);
-        }
-        for(int i=0;i<n;i++) {
-            String commands[];
-            if(cmd.matches("^\\d+e.*")) {
-                commands = new String[1];
-                commands[0] = cmd;
-                int numberOfTimes = cmd.indexOf("e") > 0 ? Integer.parseInt(cmd.substring(0, cmd.indexOf("e"))) : 1;
-                String parameter = cmd.substring(cmd.indexOf("(") + 1, cmd.lastIndexOf(")"));
-                e(numberOfTimes, parameter);
-            } else {
-                commands = cmd.split(",");
-                for(String command : commands) {
-                    String commandMethod;
-                    String parameter = null;
-                    int numberOfTimes = 1;
-                    String[] commandMethodParts = command.split("(\\((?!\\))|,|(?<!\\()\\))"); //split out parameter in brackets
-                    if(commandMethodParts.length > 1) { //has parameter
-                        commandMethod = commandMethodParts[0];
-                        parameter = commandMethodParts[1].replaceAll("\\$0", buffer);
+    public void e(final int n, final String command) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String cmd = command;
+                //TODO your background code
+                if(cmd.startsWith("!")) {
+                    cmd = cmd.substring(1);
+                }
+                for(int i=0;i<n;i++) {
+                    String commands[];
+                    if(cmd.matches("^\\d+e.*")) {
+                        commands = new String[1];
+                        commands[0] = cmd;
+                        int numberOfTimes = cmd.indexOf("e") > 0 ? Integer.parseInt(cmd.substring(0, cmd.indexOf("e"))) : 1;
+                        String parameter = cmd.substring(cmd.indexOf("(") + 1, cmd.lastIndexOf(")"));
+                        e(numberOfTimes, parameter);
                     } else {
-                        commandMethod = commandMethodParts[0];
+                        commands = cmd.split(",");
+                        for(String command : commands) {
+                            String commandMethod;
+                            String parameter = null;
+                            int numberOfTimes = 1;
+                            String[] commandMethodParts = command.split("(\\((?!\\))|,|(?<!\\()\\))"); //split out parameter in brackets
+                            if(commandMethodParts.length > 1) { //has parameter
+                                commandMethod = commandMethodParts[0];
+                                parameter = commandMethodParts[1].replaceAll("\\$0", buffer);
+                            } else {
+                                commandMethod = commandMethodParts[0];
+                            }
+
+
+                            String[] commandParts = commandMethod.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //split between number and non-number
+                            if(commandParts.length > 1) { //has numericPart
+                                numberOfTimes = Integer.parseInt(commandParts[0]);
+                                commandMethod = commandParts[1];
+                            } else {
+                                commandMethod = commandParts[0];
+                            }
+
+                            execute(commandMethod, numberOfTimes, parameter);
+
+                        }
                     }
 
-
-                    String[] commandParts = commandMethod.split("(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)"); //split between number and non-number
-                    if(commandParts.length > 1) { //has numericPart
-                        numberOfTimes = Integer.parseInt(commandParts[0]);
-                        commandMethod = commandParts[1];
-                    } else {
-                        commandMethod = commandParts[0];
-                    }
-
-                    execute(commandMethod, numberOfTimes, parameter);
 
                 }
             }
-
-
-        }
+        }).start();
 
     }
 
