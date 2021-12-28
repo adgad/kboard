@@ -11,6 +11,8 @@
     <Preference android:title="Custom Keys" >
         <intent android:action="com.adgad.kboard.CustomKeysActivity"/>
     </Preference>
+    <Preference android:title="Import Keys"  android:key="importKeys"/>
+    <Preference android:title="Export Keys"  android:key="exportKeys"/>
 
     <PreferenceCategory
         android:title="Options">
