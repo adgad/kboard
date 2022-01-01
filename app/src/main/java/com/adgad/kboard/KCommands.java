@@ -498,7 +498,7 @@ public class KCommands {
                         commands = new String[1];
                         commands[0] = cmd;
                         int numberOfTimes = cmd.indexOf("e") > 0 ? Integer.parseInt(cmd.substring(0, cmd.indexOf("e"))) : 1;
-                        String parameter = cmd.substring(cmd.indexOf("(") + 1, cmd.lastIndexOf(")"));
+                        String parameter = replaceDollarWords(cmd.substring(cmd.indexOf("(") + 1, cmd.lastIndexOf(")")));
                         e(numberOfTimes, parameter);
                     } else {
                         commands = cmd.split(",");
@@ -539,20 +539,20 @@ public class KCommands {
     private String replaceDollarWords(String initial) {
         String newWord = initial;
         if(buffer != null) {
-            newWord = newWord.replaceAll("\\$0", buffer);
+            newWord = newWord.replace("$0", buffer);
         }
         if(KboardAccessibilityService.getCurrentWhatsappName() != null) {
             String fullName = KboardAccessibilityService.getCurrentWhatsappName();
             String[] names = fullName.split(" ");
 
             if(names.length > 1) {
-                newWord = newWord.replaceAll("\\$fname", names[0]);
-                newWord = newWord.replaceAll("\\$lname", names[1]);
+                newWord = newWord.replace("$fname", names[0]);
+                newWord = newWord.replace("$lname", names[1]);
             } else {
-                newWord = newWord.replaceAll("\\$fname", fullName);
+                newWord = newWord.replace("$fname", fullName);
             }
 
-            newWord = newWord.replaceAll("\\$name", KboardAccessibilityService.getCurrentWhatsappName());
+            newWord = newWord.replace("$name", KboardAccessibilityService.getCurrentWhatsappName());
         }
         return newWord;
     }
