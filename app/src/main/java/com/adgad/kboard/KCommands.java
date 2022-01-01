@@ -222,11 +222,7 @@ public class KCommands {
     //insert text
     public void i(int n, String parameter) {
         for(int i=0;i<n;i++) {
-            if (buffer != null) {
-                commitText(parameter.replaceAll("\\$0", buffer));
-            } else {
-                commitText(parameter);
-            }
+                commitText(replaceDollarWords(parameter));
         }
 
     }
@@ -234,11 +230,7 @@ public class KCommands {
     //insert text raw (without autospace etc)
     public void iraw(int n, String parameter) {
         for(int i=0;i<n;i++) {
-            if (buffer != null) {
-                inputConnection.commitText(parameter.replaceAll("\\$0", buffer), 1);
-            } else {
                 inputConnection.commitText(parameter, 1);
-            }
         }
     }
 
@@ -292,24 +284,16 @@ public class KCommands {
     //make uppercase
     public void upper(int n, String parameter) {
         for(int i=0;i<n;i++) {
-            String lastBufferWord = buffer;
-            if (lastBufferWord != null) {
-                inputConnection.commitText(parameter.replaceAll("\\$0", lastBufferWord).toUpperCase(), 1);
-            } else {
                 inputConnection.commitText(parameter.toUpperCase(), 1);
-            }
         }
     }
 
     //make lowercase
     public void lower(int n, String parameter) {
         for(int i=0;i<n;i++) {
-            String lastBufferWord = buffer;
-            if (lastBufferWord != null) {
-                inputConnection.commitText(parameter.replaceAll("\\$0", lastBufferWord).toLowerCase(), 1);
-            } else {
+
                 inputConnection.commitText(parameter.toLowerCase(), 1);
-            }
+
         }
     }
 
@@ -457,7 +441,7 @@ public class KCommands {
         }
     }
 
-    public Uri getImageUri (Bitmap inImage) {
+    private Uri getImageUri (Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(mIme.getContentResolver(), inImage, "Title", null);
@@ -525,7 +509,8 @@ public class KCommands {
                             String[] commandMethodParts = command.split("(\\((?!\\))|,|(?<!\\()\\))"); //split out parameter in brackets
                             if(commandMethodParts.length > 1) { //has parameter
                                 commandMethod = commandMethodParts[0];
-                                parameter = commandMethodParts[1].replaceAll("\\$0", buffer);
+                                parameter = replaceDollarWords(commandMethodParts[1]);
+
                             } else {
                                 commandMethod = commandMethodParts[0];
                             }
@@ -549,6 +534,27 @@ public class KCommands {
             }
         }).start();
 
+    }
+
+    private String replaceDollarWords(String initial) {
+        String newWord = initial;
+        if(buffer != null) {
+            newWord = newWord.replaceAll("\\$0", buffer);
+        }
+        if(KboardAccessibilityService.getCurrentWhatsappName() != null) {
+            String fullName = KboardAccessibilityService.getCurrentWhatsappName();
+            String[] names = fullName.split(" ");
+
+            if(names.length > 1) {
+                newWord = newWord.replaceAll("\\$fname", names[0]);
+                newWord = newWord.replaceAll("\\$lname", names[1]);
+            } else {
+                newWord = newWord.replaceAll("\\$fname", fullName);
+            }
+
+            newWord = newWord.replaceAll("\\$name", KboardAccessibilityService.getCurrentWhatsappName());
+        }
+        return newWord;
     }
 
     private void execute(String cmd, int n, String parameter) {

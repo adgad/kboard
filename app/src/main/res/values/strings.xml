@@ -10,5 +10,5 @@
     <string name="label_keyboard_key_next">Next</string>
     <string name="label_keyboard_key_enter">\u21b5</string>
     <string name="title_activity_macro_help">MacroHelpActivity</string>
-
+    <string name="accessibility_service_description">Kboard Accessibility - used for getting the current user name in chat apps</string>
 </resources>
