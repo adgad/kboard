@@ -111,4 +111,11 @@ Outputs a cat fact from a [Cat Fact API](https://alexwohlbruck.github.io/cat-fac
 `/dad joke!curl(https://icanhazdadjoke.com/)`
 Outputs a random lame joke.
 
+## Accessibility Service (optional)
+
+kboard provides an accessibilty service which can be used to populate a person's name from Whatsapp conversations.
+
+This can be accessed with the keywords `$name`, `$fname` and `$lname`.
+
+This service is optional, and the keyboard is fully functional without it.
 
