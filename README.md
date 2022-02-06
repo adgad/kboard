@@ -2,7 +2,9 @@
 
 A programmable keyboard for Android that lets you send phrases, lenny faces, macros, or data from the Internet in a single tap!
 
-[View in Play Store](https://play.google.com/store/apps/details?id=com.adgad.kboard)
+[F-Droid](https://f-droid.org/en/packages/com.adgad.kboard/) (up to date)
+
+[Play Store](https://play.google.com/store/apps/details?id=com.adgad.kboard) (outdated)
 
 [Demo](https://www.youtube.com/watch?v=h3i5U2tk364)
 
