@@ -12,6 +12,7 @@ import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputContentInfo;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageRequest;
@@ -425,6 +426,11 @@ public class KCommands {
                 return headers;
             }
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                15000,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
 
         queue.add(stringRequest);
 
