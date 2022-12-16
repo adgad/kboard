@@ -43,7 +43,6 @@ import java.util.concurrent.TimeoutException;
  */
 
 
-@SuppressWarnings("ALL")
 public class KCommands {
 
     private static final int MAX_LOOKBACK = 500;
@@ -420,7 +419,7 @@ public class KCommands {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, parameter, future, future){
             @Override
             public Map<String, String> getHeaders(){
-                Map<String, String> headers = new HashMap<>();
+                Map<String, String> headers = new HashMap<String, String>();
                 headers.put("User-agent", "curl");
                 headers.put("Accept", "text/plain");
                 return headers;
@@ -430,7 +429,7 @@ public class KCommands {
         queue.add(stringRequest);
 
         try {
-            String response = future.get(10, TimeUnit.SECONDS);
+            String response = future.get(15, TimeUnit.SECONDS);
             i(repeat, response);
         } catch (InterruptedException e) {
             e.printStackTrace();
