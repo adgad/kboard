@@ -129,7 +129,7 @@ public class KboardIME  extends InputMethodService
 
     @Override public void onStartInput(EditorInfo attribute, boolean restarting) {
         super.onStartInput(attribute, restarting);
-        keyboard.setImeOptions(getResources(), attribute.imeOptions);
+        keyboard.setImeOptions(this, attribute.imeOptions);
     }
 
     private String getKeyString(int code) {
