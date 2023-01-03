@@ -241,7 +241,7 @@ public class KboardIME  extends InputMethodService
         }
     }
 
-    private void switchIME() {
+    public void switchIME() {
         //final String LATIN = "com.android.inputmethod.latin/.LatinIME";
 // 'this' is an InputMethodService
             try {

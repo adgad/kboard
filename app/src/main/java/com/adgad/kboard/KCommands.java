@@ -497,6 +497,7 @@ public class KCommands {
                 if(cmd.startsWith("!")) {
                     cmd = cmd.substring(1);
                 }
+                boolean switch_keyboard_when_done=false;
                 for(int i=0;i<n;i++) {
                     String commands[];
                     if(cmd.matches("^\\d+e.*")) {
@@ -529,17 +530,23 @@ public class KCommands {
                                 commandMethod = commandParts[0];
                             }
 
-                            execute(commandMethod, numberOfTimes, parameter);
-
+                            if (commandMethod.equals("qq")){
+                                switch_keyboard_when_done = true;
+                            }
+                            else {
+                                execute(commandMethod, numberOfTimes, parameter);
+                            }
                         }
                     }
-
-
                 }
+                if (switch_keyboard_when_done) mIme.switchIME();
             }
         }).start();
 
     }
+
+    // quit (switch to the keyboard application that has been used before (same as pressing the earth-wireframe key)
+    public void qq(int n) {} // at the moment never used, as qq is handled in e()
 
     private String replaceDollarWords(String initial) {
         String newWord = initial;

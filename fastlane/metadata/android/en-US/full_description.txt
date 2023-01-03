@@ -50,3 +50,4 @@ k=move cursor forward by a character
 b=move cursor back by a word
 w=move cursor forward by a word
 s=trigger a send command
+qq=switch to the keyboard application you have been using before (same as pressing the earth-wireframe key) after the rest of the commands has been executed.

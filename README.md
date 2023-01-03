@@ -60,6 +60,7 @@ Most commands can be preceded by a number, indicating how many times it will be 
 * `curl(URL)` requests data from a URL and outputs it.
 * `img(URL)` requests an image from a URL and enters it in compatible messaging apps (e.g. Whatsapp)
 * `utf(unicode characters)` outputs the text unescaping all unicode character codes (e.g. `\u00A2`)
+* `qq` switch to the keyboard application you have been using before (same as pressing the earth-wireframe key) after the rest of the commands has been executed.
 
 **Examples of use**
 
