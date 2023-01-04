@@ -6,6 +6,8 @@ import android.content.res.XmlResourceParser;
 import android.inputmethodservice.Keyboard;
 import android.view.inputmethod.EditorInfo;
 
+import androidx.core.content.ContextCompat;
+
 /**
  * Created by arjun on 14/03/15.
  */
@@ -26,7 +28,8 @@ class KBoard extends Keyboard {
         return key;
     }
 
-    public void setImeOptions(Resources res, int options) {
+    public void setImeOptions(Context context, int options) {
+        Resources res = context.getResources();
         if (mEnterKey == null) {
             return;
         }
@@ -43,7 +46,7 @@ class KBoard extends Keyboard {
                 mEnterKey.label = res.getText(R.string.label_keyboard_key_next);
                 break;
             case EditorInfo.IME_ACTION_SEARCH:
-                mEnterKey.icon = res.getDrawable(R.drawable.sym_keyboard_search);
+                mEnterKey.icon = ContextCompat.getDrawable(context, R.drawable.sym_keyboard_search);
                 mEnterKey.label = null;
                 break;
             case EditorInfo.IME_ACTION_SEND:
@@ -52,7 +55,7 @@ class KBoard extends Keyboard {
                 mEnterKey.label = res.getText(R.string.label_keyboard_key_send);
                 break;
             default:
-                mEnterKey.icon = res.getDrawable(R.drawable.sym_keyboard_return);
+                mEnterKey.icon = ContextCompat.getDrawable(context, R.drawable.sym_keyboard_return);
                 mEnterKey.label = null;
                 break;
         }
