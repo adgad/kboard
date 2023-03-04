@@ -26,9 +26,11 @@ import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +58,8 @@ public class KCommands {
     private final Map<String,String> mCommandKeys = new HashMap<>();
     private String buffer = null;
     private final KboardIME mIme;
+    private static Deque<String> undoStack = new ArrayDeque<>(100);
+    private boolean mSwitchBackOnComplete = false;
 
     public KCommands(
             KboardIME ime,
@@ -64,6 +68,7 @@ public class KCommands {
             List<String> keys,
             boolean autoSpace,
             boolean passiveAggressive) {
+
         inputConnection = ic;
         inputEditor = ei;
         mAutoSpace = autoSpace;
@@ -78,6 +83,7 @@ public class KCommands {
             }
         }
         mEmoji = EmojiManager.getAll();
+        String lastGoodInput;
     }
 
     private void commitText(String key) {
@@ -501,6 +507,23 @@ public class KCommands {
         i(n, encoded);
     }
 
+    public void undo(int n) {
+        // the last thing in there will be the current state of the text
+        if(undoStack.size() > n) {
+            for (int i = 0; i < n; i++) {
+                undoStack.pop();
+            }
+            dd(0);
+            i(1, undoStack.pop());
+        }
+    }
+
+
+    public void qq(int n) {
+        mSwitchBackOnComplete = true;
+    }
+
+
     //execute subcommand
     public void e(final int n, final String command) {
 
@@ -512,7 +535,6 @@ public class KCommands {
                 if(cmd.startsWith("!")) {
                     cmd = cmd.substring(1);
                 }
-                boolean switch_keyboard_when_done=false;
                 for(int i=0;i<n;i++) {
                     String commands[];
                     if(cmd.matches("^\\d+e.*")) {
@@ -545,23 +567,14 @@ public class KCommands {
                                 commandMethod = commandParts[0];
                             }
 
-                            if (commandMethod.equals("qq")){
-                                switch_keyboard_when_done = true;
-                            }
-                            else {
-                                execute(commandMethod, numberOfTimes, parameter);
-                            }
+                            execute(commandMethod, numberOfTimes, parameter);
                         }
                     }
                 }
-                if (switch_keyboard_when_done) mIme.switchIME();
             }
         }).start();
 
     }
-
-    // quit (switch to the keyboard application that has been used before (same as pressing the earth-wireframe key)
-    public void qq(int n) {} // at the moment never used, as qq is handled in e()
 
     private String replaceDollarWords(String initial) {
         String newWord = initial;
@@ -609,7 +622,6 @@ public class KCommands {
                 getClass().getMethod(cmd, int.class).invoke(this, n);
 
             }
-            return;
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -620,7 +632,16 @@ public class KCommands {
             }
             e.printStackTrace();
         }
+        String currentText = inputConnection.getExtractedText(new ExtractedTextRequest(), 0).text.toString();
+        String lastThing = undoStack.peekLast();
+        if(currentText.length() > 0 && !currentText.equals(lastThing)) {
+            undoStack.push(currentText);
+        }
+
         inputConnection.endBatchEdit();
+        if(mSwitchBackOnComplete) {
+            mIme.switchIME();
+        }
     }
 
 }

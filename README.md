@@ -63,6 +63,7 @@ Most commands can be preceded by a number, indicating how many times it will be 
 * `utf(unicode characters)` outputs the text unescaping all unicode character codes (e.g. `\u00A2`)
 * `urlencode(string)` outputs the url encoded version of a string (e.g. `hello%3aworld`)
 * `qq` switch to the keyboard application you have been using before (same as pressing the earth-wireframe key) after the rest of the commands has been executed.
+* `undo` undo the last change (limited to changes made by kboard)
 
 **Examples of use**
 
