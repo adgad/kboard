@@ -60,6 +60,7 @@ Most commands can be preceded by a number, indicating how many times it will be 
 * `curl(URL)` requests data from a URL and outputs it.
 * `img(URL)` requests an image from a URL and enters it in compatible messaging apps (e.g. Whatsapp)
 * `utf(unicode characters)` outputs the text unescaping all unicode character codes (e.g. `\u00A2`)
+* `urlencode(string)` outputs the url encoded version of a string (e.g. `hello%3aworld`)
 * `qq` switch to the keyboard application you have been using before (same as pressing the earth-wireframe key) after the rest of the commands has been executed.
 
 **Examples of use**
@@ -116,9 +117,13 @@ Outputs a random lame joke.
 
 ## Accessibility Service (optional)
 
-kboard provides an accessibilty service which can be used to populate a person's name from Whatsapp conversations.
+kboard provides an accessibility service which can be used to populate a person's name and messages from Whatsapp conversations.
 
-This can be accessed with the keywords `$name`, `$fname` and `$lname`.
+This can be accessed with the keywords `$name`, `$fname` and `$lname`, and `$wachat`.
 
-This service is optional, and the keyboard is fully functional without it.
+Getting the right content with the accessibility service is a bit flaky, generally going home/back will pick up the right content from a Whatsapp Conversation.
+
+This service is optional, and the keyboard is fully functional without it. 
+
+Any content retrieved from WhatsApp is not sent or logged anywhere unless you explicitly do so yourself (e.g. by using it alongside `curl`)
 

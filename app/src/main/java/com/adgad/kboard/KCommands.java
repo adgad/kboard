@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -486,6 +485,11 @@ public class KCommands {
         }
     }
 
+    public void urlencode(int n, String parameter) {
+        String encoded = Uri.encode(parameter);
+        i(n, encoded);
+    }
+
     //execute subcommand
     public void e(final int n, final String command) {
 
@@ -565,6 +569,15 @@ public class KCommands {
             }
 
             newWord = newWord.replace("$name", KboardAccessibilityService.getCurrentWhatsappName());
+        }
+        ArrayList<String> messages = KboardAccessibilityService.getCurrentWhatsappMessages();
+        if(messages.size() > 0) {
+            String messageStr = "";
+            for(int i = 0; i < messages.size(); i++) {
+                messageStr += messages.get(i);
+                messageStr += "\n";
+            }
+            newWord = newWord.replace("$wachat", messageStr);
         }
         return newWord;
     }
