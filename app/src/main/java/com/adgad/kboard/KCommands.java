@@ -217,6 +217,17 @@ public class KCommands {
         inputConnection.performContextMenuAction(android.R.id.selectAll);
     }
 
+    //select word
+    public void sw(int n) {
+        int currentPosition = getCursorPosition();
+        int positionToSelectFrom = currentPosition;
+        for(int i =0; i<n;i++) {
+            positionToSelectFrom = inputConnection.getTextBeforeCursor(100, 0).toString().lastIndexOf(" ") ;
+            inputConnection.setSelection(positionToSelectFrom, positionToSelectFrom);
+        }
+        inputConnection.setSelection(Math.max(0, positionToSelectFrom + 1), currentPosition);
+    }
+
 
     //insert text
     public void i(int n, String parameter) {

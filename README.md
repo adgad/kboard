@@ -41,7 +41,8 @@ Most commands can be preceded by a number, indicating how many times it will be 
 * `y` copy selection
 * `p` paste from buffer
 * `pc` paste from clipboard
-* `y` select all
+* `sa` select all
+* `sw` select a word, going backwards from the current cursor position
 * `i(text)` output the content of the brackets ($0 gets replaced * with the last deleted/copied content)
 * `iraw(text)` as i, but does not adhere to settings such as autospace or Passive Aggressive
 * `upper(text)` as i, but in upper case
