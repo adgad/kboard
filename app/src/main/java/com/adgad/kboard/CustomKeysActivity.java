@@ -87,8 +87,11 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
 
 
     private void showAddDialog(int index, String word) {
+        final int keyCount = adapter.getItemCount();
+
         DialogFragment newFragment = new AddWordDialogFragment();
         Bundle args = new Bundle();
+        args.putInt("keyCount", keyCount);
         args.putInt("index", index);
         args.putString("word", word);
         newFragment.setArguments(args);
@@ -113,7 +116,7 @@ public class CustomKeysActivity extends Activity implements AddWordDialogFragmen
 
     @Override
     public void onDialogNegativeClick(DialogFragment dialog, int index) {
-        if(index > 0) {
+        if(index >= 0) {
             adapter.remove(index);
         }
         dialog.dismiss();
