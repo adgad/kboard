@@ -400,11 +400,10 @@ public class KCommands {
     //move to start of line
     public void startOfLine(int n) {
         for(int i=0;i<n;i++) {
-            final String splitRegexp = "(?<=\\n)";
-
-            String[] lines = inputConnection.getTextBeforeCursor(MAX_LOOKBACK, 0).toString().split(splitRegexp);
-            String lastLine = lines[lines.length - 1];
-            int position = getCursorPosition() - lastLine.length();
+            String textBeforeCursor = inputConnection.getTextBeforeCursor(MAX_LOOKBACK, 0).toString();
+            int lastNewLine = textBeforeCursor.lastIndexOf('\n');
+            int charactersInCurrentLine = textBeforeCursor.length() - lastNewLine - 1;
+            int position = getCursorPosition() - charactersInCurrentLine;
             if(position < 0) {
                 position = 0;
             }
@@ -415,11 +414,10 @@ public class KCommands {
     //move to end of line
     public void endOfLine(int n) {
         for(int i=0;i<n;i++) {
-            final String splitRegexp = "\\n";
-
-            String[] lines = inputConnection.getTextAfterCursor(MAX_LOOKBACK, 0).toString().split(splitRegexp);
-            int nextLineLength = lines[0].equals("") ? lines[1].length() + 1 : lines[0].length();
-            int position = getCursorPosition() + nextLineLength;
+            String textAfterCursor = inputConnection.getTextAfterCursor(MAX_LOOKBACK, 0).toString();
+            int nextNewLine = textAfterCursor.indexOf('\n');
+            int charactersInCurrentLine = nextNewLine < 0 ? textAfterCursor.length() : nextNewLine;
+            int position = getCursorPosition() + charactersInCurrentLine;
             inputConnection.setSelection(position, position);
         }
     }
